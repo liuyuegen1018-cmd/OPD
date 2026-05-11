@@ -1,0 +1,51 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    image: autoresearch-app:local
+    ports:
+      - "${APP_PORT:-8787}:8787"
+    environment:
+      APP_PORT: "8787"
+      RUNS_DIR: /data/runs
+      RESEARCHCLAW_HOME: /workspace/AutoResearchClaw
+      RESEARCHCLAW_CONFIG: /workspace/AutoResearchClaw/config.glm5.local.yaml
+      AGENT_BACKEND: openclaw-skills
+      AGENT_RUNNER_CMD: /app/scripts/run-openclaw-agent-docker.sh
+      AGENT_IMAGE: autoresearch-openclaw-agent:local
+      HOST_PROJECT_ROOT: ${HOST_PROJECT_ROOT:-/home/cxs/下载/AutoResearch}
+      GLM_API_KEY: ${GLM_API_KEY:-EMPTY}
+      OPENCLAW_RUN_SKILL_CMD: ${OPENCLAW_RUN_SKILL_CMD:-}
+      OPENCLAW_SKILL_TIMEOUT_MS: ${OPENCLAW_SKILL_TIMEOUT_MS:-900000}
+      ALLOW_FAKE_SKILL_OUTPUT: ${ALLOW_FAKE_SKILL_OUTPUT:-false}
+    volumes:
+      - ./runs:/data/runs
+      - ./AutoResearchClaw:/workspace/AutoResearchClaw:ro
+      - ./skills_keyan:/workspace/skills_keyan:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile.openclaw-agent
+    image: autoresearch-openclaw-agent:local
+    profiles:
+      - agent
+    volumes:
+      - ./runs:/data/runs
+      - ./skills_keyan:/workspace/skills_keyan:ro
+    working_dir: /workspace
+    environment:
+      OPENCLAW_RUN_SKILL_CMD: ${OPENCLAW_RUN_SKILL_CMD:-}
+      OPENCLAW_SKILL_TIMEOUT_MS: ${OPENCLAW_SKILL_TIMEOUT_MS:-900000}
+      ALLOW_FAKE_SKILL_OUTPUT: ${ALLOW_FAKE_SKILL_OUTPUT:-false}
+      OPENCLAW_CLI: /workspace/openclaw/openclaw.mjs
+      OPENCLAW_NODE: /usr/local/bin/node
+      OPENCLAW_SKILLS_DIR: /workspace/skills_keyan
+      GLM_API_KEY: ${GLM_API_KEY:-EMPTY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+      TAVILY_API_KEY: ${TAVILY_API_KEY:-}
+    command: ["--help"]

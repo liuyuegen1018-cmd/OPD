@@ -1,0 +1,83 @@
+{
+  "customEmployees": [
+    {
+      "id": "custom_1_1778310114770",
+      "name": "lyg",
+      "cn": "文献研究员",
+      "status": "idle",
+      "health": "good",
+      "statusText": "空闲",
+      "task": "等待分配科研任务",
+      "stages": "1",
+      "stageRange": [
+        1,
+        1
+      ],
+      "stageName": "文献研究员",
+      "phase": "literature_review",
+      "skill": "literature-review",
+      "outputs": 0,
+      "triggers": 0,
+      "activeDays": 0,
+      "projectsDone": 0,
+      "workload": 0,
+      "onboardDays": 1,
+      "employment": "数字员工",
+      "skills": [
+        "文献研究员"
+      ],
+      "skillDesc": "负责文献研究员阶段任务",
+      "points": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockedReason": ""
+    },
+    {
+      "id": "custom_3_1778323180595",
+      "name": "zzz",
+      "cn": "实验设计员",
+      "status": "idle",
+      "health": "good",
+      "statusText": "空闲",
+      "task": "等待分配科研任务",
+      "stages": "3",
+      "stageRange": [
+        3,
+        3
+      ],
+      "stageName": "实验设计员",
+      "phase": "experiment_design",
+      "skill": "experiment-design",
+      "outputs": 0,
+      "triggers": 0,
+      "activeDays": 0,
+      "projectsDone": 0,
+      "workload": 0,
+      "onboardDays": 1,
+      "employment": "数字员工",
+      "skills": [
+        "实验设计员"
+      ],
+      "skillDesc": "负责实验设计员阶段任务",
+      "points": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockedReason": ""
+    }
+  ],
+  "hiddenEmployeeIds": [
+    "custom_2_1778465581630",
+    "custom_2_1778465581631",
+    "custom_2_1778465582458"
+  ],
+  "updatedAt": "2026-05-11T02:55:52.620Z",
+  "migratedAt": "2026-05-09T14:14:16.335Z"
+}

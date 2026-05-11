@@ -1,0 +1,58 @@
+FROM python:3.11-slim-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    MPLBACKEND=Agg
+
+WORKDIR /workspace/AutoResearchClaw
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
+      curl \
+      git \
+      gfortran \
+      libopenblas-dev \
+      liblapack-dev \
+      pandoc \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml README.md ./
+COPY researchclaw ./researchclaw
+COPY prompts.default.yaml config.researchclaw.example.yaml config.glm5.local.yaml ./
+
+RUN python -m pip install --upgrade pip setuptools wheel \
+    && python -m pip install -e ".[pdf]" \
+    && python -m pip install \
+      numpy \
+      scipy \
+      pandas \
+      scikit-learn \
+      matplotlib \
+      seaborn \
+      tqdm \
+      networkx \
+      sympy \
+      statsmodels \
+      requests \
+      httpx \
+      huggingface-hub \
+      tavily-python \
+    && python -m pip install \
+      torch torchvision torchaudio \
+      --index-url https://download.pytorch.org/whl/cpu
+
+RUN python - <<'PY'
+import matplotlib
+import numpy
+import pandas
+import scipy
+import sklearn
+import torch
+import yaml
+print("agent image dependency check ok", torch.__version__)
+PY
+
+ENTRYPOINT ["python", "-m", "researchclaw"]
+CMD ["--help"]

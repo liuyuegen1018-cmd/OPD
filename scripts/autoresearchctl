@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BASE_URL="${AUTORESEARCH_APP_URL:-http://localhost:8787}"
+COMMAND="${1:-help}"
+
+case "$COMMAND" in
+  create)
+    TOPIC="${2:-}"
+    if [[ -z "$TOPIC" ]]; then
+      echo "usage: autoresearchctl create \"research topic\"" >&2
+      exit 2
+    fi
+    curl -sS -X POST "$BASE_URL/api/runs" \
+      -H "Content-Type: application/json" \
+      -d "{\"topic\":\"$TOPIC\",\"auto_approve\":true}"
+    echo
+    ;;
+  list)
+    curl -sS "$BASE_URL/api/runs"
+    echo
+    ;;
+  status)
+    RUN_ID="${2:-}"
+    if [[ -z "$RUN_ID" ]]; then
+      echo "usage: autoresearchctl status <run_id>" >&2
+      exit 2
+    fi
+    curl -sS "$BASE_URL/api/runs/$RUN_ID"
+    echo
+    ;;
+  artifacts)
+    RUN_ID="${2:-}"
+    if [[ -z "$RUN_ID" ]]; then
+      echo "usage: autoresearchctl artifacts <run_id>" >&2
+      exit 2
+    fi
+    curl -sS "$BASE_URL/api/runs/$RUN_ID/artifacts"
+    echo
+    ;;
+  guide)
+    ARTIFACT_ID="${2:-}"
+    MESSAGE="${3:-}"
+    if [[ -z "$ARTIFACT_ID" || -z "$MESSAGE" ]]; then
+      echo "usage: autoresearchctl guide <artifact_id> \"message\"" >&2
+      exit 2
+    fi
+    curl -sS -X POST "$BASE_URL/api/artifacts/$ARTIFACT_ID/guide" \
+      -H "Content-Type: application/json" \
+      -d "{\"message\":\"$MESSAGE\",\"scope\":\"current_artifact\"}"
+    echo
+    ;;
+  help|*)
+    cat <<'USAGE'
+usage:
+  autoresearchctl create "research topic"
+  autoresearchctl list
+  autoresearchctl status <run_id>
+  autoresearchctl artifacts <run_id>
+  autoresearchctl guide <artifact_id> "message"
+
+env:
+  AUTORESEARCH_APP_URL=http://localhost:8787
+USAGE
+    ;;
+esac

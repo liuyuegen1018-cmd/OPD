@@ -1,0 +1,2087 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>一人科研部门工作台原型</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f9fafc;
+      --text: #172033;
+      --muted: #697386;
+      --border: #dde3ee;
+      --blue: #2f6fed;
+      --green: #138a5b;
+      --amber: #b7791f;
+      --red: #c24132;
+      --cyan: #087c8f;
+      --violet: #7551b8;
+      --shadow: 0 8px 24px rgba(34, 45, 70, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: 0;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+    }
+
+    .sidebar {
+      background: #111827;
+      color: #f8fafc;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #2f6fed;
+      font-weight: 800;
+    }
+
+    .brand-text {
+      line-height: 1.15;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 760;
+    }
+
+    .brand-subtitle {
+      color: #a7b0c0;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .project-tools {
+      display: grid;
+      gap: 8px;
+    }
+
+    .search {
+      width: 100%;
+      height: 34px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      color: #f8fafc;
+      border-radius: 8px;
+      padding: 0 10px;
+      outline: none;
+    }
+
+    .search::placeholder {
+      color: #99a4b6;
+    }
+
+    .status-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .status-tabs button {
+      height: 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #cbd5e1;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .status-tabs button.active {
+      background: #fff;
+      color: #111827;
+    }
+
+    .project-list {
+      display: grid;
+      gap: 8px;
+      max-height: 310px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .project-item {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #f8fafc;
+      border-radius: 8px;
+      padding: 11px;
+      cursor: pointer;
+    }
+
+    .project-item.active {
+      background: #ffffff;
+      color: #111827;
+      border-color: #ffffff;
+    }
+
+    .project-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 8px;
+    }
+
+    .project-name {
+      font-size: 13px;
+      font-weight: 740;
+      line-height: 1.28;
+    }
+
+    .project-topic {
+      color: #a7b0c0;
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 4px;
+    }
+
+    .project-item.active .project-topic {
+      color: #5f6b7a;
+    }
+
+    .project-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: #c4cad6;
+      font-size: 11px;
+      margin-top: 7px;
+    }
+
+    .project-item.active .project-meta {
+      color: #5f6b7a;
+    }
+
+    .project-progress {
+      height: 6px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .project-item.active .project-progress {
+      background: #e5e7eb;
+    }
+
+    .project-progress span {
+      display: block;
+      height: 100%;
+      background: #54d3a5;
+    }
+
+    .project-item.blocked .project-progress span { background: #f0b94b; }
+    .project-item.done .project-progress span { background: #16a36d; }
+    .project-item.failed .project-progress span { background: #d45b50; }
+
+    .task-card {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .task-label {
+      color: #a7b0c0;
+      font-size: 12px;
+      margin-bottom: 7px;
+    }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+
+    .progress-track {
+      height: 8px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #54d3a5;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #c4cad6;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      color: #d7deea;
+      background: transparent;
+      border-radius: 8px;
+      padding: 10px 11px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .nav button.active {
+      background: #ffffff;
+      color: #111827;
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 18px;
+    }
+
+    .sidebar-note {
+      margin-top: auto;
+      color: #a7b0c0;
+      font-size: 12px;
+      line-height: 1.55;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 16px;
+    }
+
+    main {
+      min-width: 0;
+      padding: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .headline h1 {
+      font-size: 24px;
+      line-height: 1.2;
+      margin: 0 0 6px;
+    }
+
+    .headline p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .context-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 8px;
+      height: 36px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+    }
+
+    .btn.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .scope-toggle {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 8px;
+      overflow: hidden;
+      height: 34px;
+    }
+
+    .scope-toggle button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 0 11px;
+      cursor: pointer;
+      min-width: 82px;
+    }
+
+    .scope-toggle button.active {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .research-flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(126px, 1fr));
+      gap: 26px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .flow-step {
+      border: 1px solid #dbe5f6;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #f6f9ff 100%);
+      padding: 11px 12px;
+      min-height: 78px;
+      position: relative;
+      display: grid;
+      gap: 6px;
+      align-content: start;
+      box-shadow: 0 6px 16px rgba(47, 111, 237, 0.07);
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: "›";
+      position: absolute;
+      right: -32px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #3f7cf2 0%, #245ed4 100%);
+      border: 3px solid #ffffff;
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+      z-index: 1;
+      box-shadow: 0 8px 18px rgba(47, 111, 237, 0.28);
+    }
+
+    .flow-step::before {
+      content: "";
+      width: 28px;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--blue);
+      opacity: 0.78;
+    }
+
+    .flow-title {
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .flow-desc {
+      color: #5f6f86;
+      font-size: 11px;
+      line-height: 1.3;
+    }
+
+    .flow-owner {
+      color: #315fbe;
+      font-size: 11px;
+      line-height: 1.35;
+      font-weight: 680;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid.monitor {
+      grid-template-columns: 1.15fr 0.85fr;
+      align-items: start;
+    }
+
+    .project-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .project-table th,
+    .project-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .project-table th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 680;
+      background: var(--panel-soft);
+    }
+
+    .project-table tr {
+      cursor: pointer;
+    }
+
+    .project-table tr.active td {
+      background: #f2f6ff;
+    }
+
+    .project-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .project-card {
+      border: 1px solid var(--border);
+      background: var(--panel-soft);
+      border-radius: 8px;
+      padding: 13px;
+      cursor: pointer;
+      min-height: 154px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .project-card.active {
+      border-color: var(--blue);
+      background: #f2f6ff;
+      box-shadow: 0 0 0 2px rgba(47, 111, 237, 0.12);
+    }
+
+    .project-card-title {
+      font-size: 14px;
+      font-weight: 760;
+      line-height: 1.3;
+    }
+
+    .project-card-topic {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      min-height: 34px;
+    }
+
+    .project-card-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    #burndown .project-card {
+      min-height: 118px;
+      padding: 11px;
+      gap: 8px;
+    }
+
+    #burndown .project-card-topic {
+      min-height: auto;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    #burndown .panel-body {
+      padding: 12px;
+    }
+
+    .detail-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .detail-title-row h2 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .detail-title-row p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .table-progress {
+      width: 100%;
+      min-width: 88px;
+      height: 7px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+
+    .table-progress span {
+      display: block;
+      height: 100%;
+      background: var(--blue);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 15px;
+      font-weight: 760;
+    }
+
+    .panel-subtitle {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .kanban {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .phase {
+      background: var(--panel-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      min-height: 104px;
+    }
+
+    .phase.done { border-color: rgba(19, 138, 91, 0.35); }
+    .phase.active { border-color: rgba(47, 111, 237, 0.55); background: #f2f6ff; }
+    .phase.waiting { border-color: rgba(183, 121, 31, 0.35); }
+
+    .phase-name {
+      font-size: 13px;
+      font-weight: 730;
+      margin-bottom: 8px;
+    }
+
+    .phase-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      height: 24px;
+      border-radius: 999px;
+      padding: 0 9px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .status-pill.good { color: var(--green); background: #e7f6ef; }
+    .status-pill.active { color: var(--blue); background: #eaf1ff; }
+    .status-pill.warning { color: var(--amber); background: #fff6df; }
+    .status-pill.critical { color: var(--red); background: #fff0ee; }
+
+    .employees {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 10px;
+    }
+
+    .employee {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      min-height: 104px;
+    }
+
+    .employee-name {
+      font-weight: 720;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .employee-task {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .employee-meta {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.35;
+      margin-top: 8px;
+    }
+
+    .employee.active {
+      border-color: #94b7ff;
+      box-shadow: 0 0 0 2px #dbe8ff;
+      background: #ffffff;
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.28);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms ease;
+      z-index: 30;
+    }
+
+    .drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .employee-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(720px, 100vw);
+      height: 100vh;
+      background: var(--panel);
+      border-left: 1px solid var(--border);
+      box-shadow: -18px 0 42px rgba(15, 23, 42, 0.16);
+      transform: translateX(100%);
+      transition: transform 180ms ease;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .employee-drawer.open {
+      transform: translateX(0);
+    }
+
+    .drawer-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .drawer-body {
+      padding: 16px;
+      overflow: auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    .drawer-close {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--panel-soft);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .employee-profile {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 14px;
+    }
+
+    .profile-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 13px;
+    }
+
+    .avatar-card {
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background:
+        radial-gradient(circle at 50% 33%, #172033 0 9px, transparent 10px),
+        radial-gradient(circle at 41% 31%, #ffffff 0 4px, transparent 5px),
+        radial-gradient(circle at 59% 31%, #ffffff 0 4px, transparent 5px),
+        linear-gradient(135deg, #dff4df 0 62%, #f7fafc 63% 100%);
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .avatar-card::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      bottom: 13px;
+      height: 22px;
+      border-radius: 14px 14px 5px 5px;
+      background: #172033;
+    }
+
+    .profile-name {
+      font-weight: 820;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .profile-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .profile-stat {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      padding: 10px;
+    }
+
+    .profile-stat-value {
+      font-size: 20px;
+      font-weight: 820;
+    }
+
+    .profile-stat-label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 3px;
+    }
+
+    .personnel-info {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .personnel-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .personnel-row strong {
+      color: var(--text);
+      font-weight: 680;
+      text-align: right;
+    }
+
+    .activity-panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 14px;
+      overflow: auto;
+    }
+
+    .heatmap-toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .heatmap-title {
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(30, 13px);
+      grid-template-rows: repeat(7, 13px);
+      grid-auto-flow: column;
+      gap: 4px;
+      min-width: 506px;
+    }
+
+    .heat-cell {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      background: #e8edf3;
+    }
+
+    .heat-cell.l1 { background: #cceacb; }
+    .heat-cell.l2 { background: #9ad59b; }
+    .heat-cell.l3 { background: #5fa86b; }
+    .heat-cell.l4 { background: #2f6f45; }
+
+    .heatmap-legend {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 10px;
+    }
+
+    .gantt-panel {
+      margin-top: 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      overflow: hidden;
+    }
+
+    .gantt-header {
+      display: grid;
+      grid-template-columns: 170px repeat(14, minmax(46px, 1fr));
+      border-bottom: 1px solid var(--border);
+      background: #ffffff;
+      min-width: 820px;
+    }
+
+    .gantt-cell {
+      padding: 9px 8px;
+      border-right: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .gantt-row {
+      display: grid;
+      grid-template-columns: 170px repeat(14, minmax(46px, 1fr));
+      min-height: 38px;
+      border-bottom: 1px solid var(--border);
+      min-width: 820px;
+      position: relative;
+    }
+
+    .gantt-row:last-child { border-bottom: 0; }
+
+    .gantt-name {
+      padding: 10px 8px;
+      border-right: 1px solid var(--border);
+      background: #ffffff;
+    }
+
+    .gantt-employee {
+      font-size: 12px;
+      font-weight: 740;
+    }
+
+    .gantt-task {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .gantt-track {
+      grid-column: 2 / -1;
+      display: grid;
+      grid-template-columns: repeat(14, minmax(46px, 1fr));
+      position: relative;
+    }
+
+    .gantt-track span {
+      border-right: 1px solid var(--border);
+    }
+
+    .gantt-bar {
+      position: absolute;
+      top: 9px;
+      height: 20px;
+      border-radius: 6px;
+      padding: 0 8px;
+      display: flex;
+      align-items: center;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      overflow: hidden;
+      white-space: nowrap;
+      background: var(--blue);
+    }
+
+    .gantt-bar.green { background: var(--green); }
+    .gantt-bar.amber { background: var(--amber); }
+    .gantt-bar.cyan { background: var(--cyan); }
+    .gantt-bar.muted {
+      opacity: 0.28;
+      color: #eef2f7;
+    }
+
+    .gantt-bar.blocked {
+      outline: 2px solid rgba(194, 65, 50, 0.72);
+      outline-offset: 1px;
+    }
+
+    .gantt-scroll {
+      overflow-x: auto;
+    }
+
+    .project-overview {
+      display: grid;
+      grid-template-columns: minmax(240px, 1.2fr) repeat(4, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .overview-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 12px;
+      min-width: 0;
+    }
+
+    .overview-label {
+      color: var(--muted);
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .overview-value {
+      font-size: 13px;
+      font-weight: 720;
+      line-height: 1.35;
+    }
+
+    .skills {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      border-radius: 999px;
+      background: #eaf1ff;
+      color: var(--blue);
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .skill-desc {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 11px;
+    }
+
+    .event {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 5px;
+      background: var(--blue);
+      box-shadow: 0 0 0 4px #eaf1ff;
+    }
+
+    .dot.green { background: var(--green); box-shadow: 0 0 0 4px #e7f6ef; }
+    .dot.amber { background: var(--amber); box-shadow: 0 0 0 4px #fff6df; }
+
+    .event-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .event-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    .burndown-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .chart {
+      width: 100%;
+      height: 320px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background:
+        linear-gradient(#edf1f7 1px, transparent 1px),
+        linear-gradient(90deg, #edf1f7 1px, transparent 1px);
+      background-size: 100% 25%, 12.5% 100%;
+      padding: 14px;
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .mini-charts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini-chart {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 11px;
+    }
+
+    .mini-chart-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 9px;
+    }
+
+    .mini-chart-title {
+      font-size: 12px;
+      font-weight: 740;
+    }
+
+    .mini-chart svg {
+      width: 100%;
+      height: 58px;
+      display: block;
+    }
+
+    .risk-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .risk-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--panel-soft);
+    }
+
+    .risk-title {
+      font-size: 13px;
+      font-weight: 720;
+      margin-bottom: 5px;
+    }
+
+    .risk-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .risk-actions {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .risk-actions .btn {
+      height: 30px;
+      padding: 0 9px;
+      font-size: 12px;
+    }
+
+    .artifacts-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .employee-filter {
+      display: grid;
+      gap: 8px;
+    }
+
+    .filter-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 11px;
+      cursor: pointer;
+    }
+
+    .filter-item.active {
+      border-color: var(--blue);
+      background: #f2f6ff;
+    }
+
+    .filter-title {
+      font-size: 13px;
+      font-weight: 730;
+    }
+
+    .filter-meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .artifact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .artifact {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 13px;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .artifact-title {
+      font-size: 14px;
+      font-weight: 740;
+    }
+
+    .artifact-meta {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .artifact-footer {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .type {
+      color: var(--cyan);
+      background: #e6f7fa;
+      border-radius: 999px;
+      font-size: 12px;
+      padding: 4px 8px;
+      font-weight: 680;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .guide-input {
+      width: 100%;
+      min-height: 84px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      line-height: 1.45;
+    }
+
+    .guide-scope {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 8px;
+    }
+
+    .guide-scope label {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 9px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+    }
+
+    .guide-scope input {
+      margin: 0;
+    }
+
+    .guidance-context {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .guidance-history {
+      display: grid;
+      gap: 8px;
+    }
+
+    .history-item {
+      border-left: 3px solid var(--blue);
+      background: var(--panel-soft);
+      border-radius: 6px;
+      padding: 9px 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .annotation-box {
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--panel-soft);
+      padding: 12px;
+      display: grid;
+      gap: 9px;
+    }
+
+
+    @media (max-width: 1100px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .grid.monitor,
+      .burndown-layout,
+      .project-overview,
+      .artifacts-layout { grid-template-columns: 1fr; }
+      .mini-charts { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+      .project-cards { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
+      .guide-scope { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    }
+
+    @media (max-width: 680px) {
+      main { padding: 14px; }
+      .employee-drawer { width: 100vw; }
+      .topbar { flex-direction: column; }
+      .actions { justify-content: flex-start; }
+      .research-flow { grid-template-columns: 1fr; }
+      .flow-step:not(:last-child)::after {
+        content: "⌄";
+        right: 50%;
+        top: auto;
+        bottom: -32px;
+        transform: translateX(50%);
+      }
+      .kanban,
+      .mini-charts,
+      .artifact-grid,
+      .project-cards,
+      .project-overview,
+      .guide-scope { grid-template-columns: 1fr; }
+      .chart { height: 260px; }
+      .status-tabs { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <div class="brand-text">
+          <div class="brand-title">一人科研部门</div>
+          <div class="brand-subtitle">AutoResearch Workbench</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="页面导航">
+        <button class="active" data-view="monitor">
+          <span class="nav-icon">▦</span>
+          <span>部门概况</span>
+        </button>
+        <button data-view="burndown">
+          <span class="nav-icon">⌁</span>
+          <span>项目进展</span>
+        </button>
+        <button data-view="artifacts">
+          <span class="nav-icon">□</span>
+          <span>部门产出</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-note">
+        部门概况看运行流程和员工状态，项目进展看阶段计划和风险，部门产出看文件、审查和修改指导。
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="headline">
+          <h1 id="pageTitle">科研工作台</h1>
+          <p id="pageSubtitle">把自动科研 pipeline 映射为一个由数字员工协作的一人科研部门。</p>
+        </div>
+        <div class="actions" id="pageActions">
+          <button class="btn primary">新建研究任务</button>
+        </div>
+      </div>
+
+      <section id="monitor" class="view active">
+        <div class="grid monitor">
+          <div class="panel" style="grid-column: 1 / -1;">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">运行流程</div>
+                <div class="panel-subtitle">用流程图表达自动科研的主要环节，以及每个环节由哪些数字员工参与</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="research-flow" id="researchFlow"></div>
+            </div>
+          </div>
+
+          <div class="panel" style="grid-column: 1 / -1;">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">项目概况</div>
+                <div class="panel-subtitle">跨项目查看进度、状态、当前负责人和最近产出</div>
+              </div>
+              <span class="status-pill active">多项目</span>
+            </div>
+            <div class="panel-body">
+              <div class="project-cards" id="monitorProjectCards"></div>
+            </div>
+          </div>
+
+          <div class="panel" style="grid-column: 1 / -1;">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">员工概况</div>
+                <div class="panel-subtitle">跨项目查看每个数字员工的当前职责、负载和健康状态</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="employees" id="employeeList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="burndown" class="view">
+        <div class="panel" style="margin-bottom: 14px;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">项目卡片</div>
+                <div class="panel-subtitle">选择项目后，下方阶段计划和风险摘要同步切换</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="project-cards" id="burndownProjectCards"></div>
+          </div>
+        </div>
+        <div class="burndown-layout">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title" id="burnDetailTitle">GNN 药物发现泛化研究</div>
+                <div class="panel-subtitle" id="burnDetailSubtitle">Stage 9/23 · 实验工程师</div>
+              </div>
+              <span class="status-pill active" id="remainingPill">14 remaining</span>
+            </div>
+            <div class="panel-body">
+              <div class="gantt-panel" style="margin-top: 0;">
+                <div class="panel-header">
+                  <div>
+                    <div class="panel-title">阶段计划</div>
+                    <div class="panel-subtitle">用甘特图展示流程段、负责人、持续区间和阻塞位置</div>
+                  </div>
+                  <span class="status-pill active">23 stages</span>
+                </div>
+                <div class="gantt-scroll" id="projectGantt"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">风险摘要</div>
+                <div class="panel-subtitle">项目进展页只展示推进风险，不进行内容审查和修改</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="risk-list" id="riskList"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="artifacts" class="view">
+        <div class="panel" style="margin-bottom: 14px;">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">项目卡片</div>
+              <div class="panel-subtitle">按项目查看产出数量、验证状态和最近产出</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="project-cards" id="artifactProjectCards"></div>
+          </div>
+        </div>
+        <div class="grid">
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">产出概况</div>
+                <div class="panel-subtitle">所选项目的科研产出集中展示，标注生成员工并提供查看和下载</div>
+              </div>
+              <span class="status-pill good">verified outputs</span>
+            </div>
+            <div class="panel-body">
+              <div class="artifact-grid" id="artifactGrid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="employeeDrawerBackdrop"></div>
+  <aside class="employee-drawer" id="employeeDrawer" aria-label="数字员工详情">
+    <div class="drawer-header">
+      <div>
+        <div class="panel-title">员工详情</div>
+        <div class="panel-subtitle">查看当前任务、人事信息、核心技能和工作记录</div>
+      </div>
+      <button class="drawer-close" id="employeeDrawerClose" aria-label="关闭员工详情">×</button>
+    </div>
+    <div class="drawer-body">
+      <div class="employee-profile" id="employeeFocus"></div>
+      <div class="activity-panel">
+        <div class="heatmap-toolbar">
+          <div>
+            <div class="heatmap-title">工作记录热力图</div>
+            <div class="employee-task">最近 30 周的任务活跃度、产出和触发器响应</div>
+          </div>
+          <span class="status-pill good">30w</span>
+        </div>
+        <div class="heatmap-grid" id="employeeHeatmap"></div>
+        <div class="heatmap-legend">
+          <span>Less</span>
+          <span class="heat-cell"></span>
+          <span class="heat-cell l1"></span>
+          <span class="heat-cell l2"></span>
+          <span class="heat-cell l3"></span>
+          <span class="heat-cell l4"></span>
+          <span>More</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <script>
+    let selectedProjectId = "rc-gnn-drug";
+    let selectedEmployeeId = "experiment_engineer";
+    let employeeDrawerOpen = false;
+    const pageFilters = {
+      monitor: { status: "all", search: "" },
+      burndown: { status: "all", search: "" },
+      artifacts: { status: "all", search: "" }
+    };
+
+    const projects = [
+      {
+        id: "rc-gnn-drug",
+        name: "GNN 药物发现泛化研究",
+        topic: "图神经网络在药物发现中的可验证泛化能力研究",
+        status: "running",
+        stage: 9,
+        progress: 39,
+        activeEmployee: "experiment_engineer",
+        activeEmployeeCn: "实验工程师",
+        approvals: 1,
+        remaining: 14,
+        artifacts: 21,
+        latestOutput: "experiment_plan.yaml",
+        updated: "15:42"
+      },
+      {
+        id: "rc-mm-survey",
+        name: "多模态综述生成研究",
+        topic: "面向科研综述的多模态检索增强写作方法",
+        status: "blocked",
+        stage: 5,
+        progress: 22,
+        activeEmployee: "literature_analyst",
+        activeEmployeeCn: "文献分析师",
+        approvals: 1,
+        remaining: 18,
+        artifacts: 9,
+        latestOutput: "shortlist.md",
+        updated: "15:18"
+      },
+      {
+        id: "rc-rl-efficiency",
+        name: "强化学习样本效率研究",
+        topic: "小样本约束下的离线强化学习策略评估",
+        status: "queued",
+        stage: 1,
+        progress: 0,
+        activeEmployee: "research_strategist",
+        activeEmployeeCn: "研究策略师",
+        approvals: 0,
+        remaining: 23,
+        artifacts: 0,
+        latestOutput: "等待启动",
+        updated: "14:59"
+      },
+      {
+        id: "rc-code-review",
+        name: "LLM 代码评审基准",
+        topic: "面向真实缺陷修复的 LLM 代码评审可靠性评估",
+        status: "done",
+        stage: 23,
+        progress: 100,
+        activeEmployee: "citation_auditor",
+        activeEmployeeCn: "引用审计员",
+        approvals: 0,
+        remaining: 0,
+        artifacts: 34,
+        latestOutput: "final_paper.pdf",
+        updated: "13:44"
+      }
+    ];
+
+    const employees = [
+      { id: "research_strategist", name: "Research Strategist", cn: "研究策略师", status: "done", health: "good", task: "完成选题、范围和研究问题拆解", stages: "1-2", outputs: 3, triggers: 6, activeDays: 9, projectsDone: 4, workload: 18, onboardDays: 128, employment: "核心员工", skills: ["选题拆解", "研究问题定义", "任务边界", "指标选择"], skillDesc: "擅长把模糊研究方向拆成可执行的研究任务和评价标准。", points: [2, 1, 0, 0, 0] },
+      { id: "literature_analyst", name: "Literature Analyst", cn: "文献分析师", status: "done", health: "good", task: "筛选 42 篇论文并提取知识卡片", stages: "3-6", outputs: 7, triggers: 14, activeDays: 18, projectsDone: 3, workload: 42, onboardDays: 121, employment: "核心员工", skills: ["文献检索", "相关性筛选", "知识卡片", "引用初筛"], skillDesc: "擅长从论文池中提炼可靠证据，并形成后续假设设计需要的知识材料。", points: [4, 3, 2, 1, 0] },
+      { id: "hypothesis_designer", name: "Hypothesis Designer", cn: "假设设计师", status: "done", health: "good", task: "生成 3 个可验证研究假设", stages: "7-8", outputs: 2, triggers: 5, activeDays: 8, projectsDone: 2, workload: 22, onboardDays: 96, employment: "专项员工", skills: ["研究空白", "假设生成", "可验证性", "创新性判断"], skillDesc: "擅长把文献证据转成清晰、可检验、能落到实验设计上的研究假设。", points: [2, 2, 1, 0, 0] },
+      { id: "experiment_engineer", name: "Experiment Engineer", cn: "实验工程师", status: "working", health: "active", task: "正在设计实验协议和 baseline", stages: "9-13", outputs: 2, triggers: 18, activeDays: 28, projectsDone: 1, workload: 79, onboardDays: 84, employment: "关键岗位", skills: ["实验设计", "代码生成", "baseline", "metrics contract", "错误修复"], skillDesc: "擅长把研究假设转成可运行实验，并修复运行错误和指标产出问题。", points: [5, 5, 5, 5, 5] },
+      { id: "data_analyst", name: "Data Analyst", cn: "数据分析师", status: "queued", health: "unknown", task: "等待实验结果进入统计分析", stages: "14-15", outputs: 0, triggers: 3, activeDays: 4, projectsDone: 1, workload: 35, onboardDays: 76, employment: "核心员工", skills: ["统计分析", "结果表格", "显著性检验", "失败归因"], skillDesc: "擅长解释实验结果，判断假设是否成立，并输出论文需要的表格和结论。", points: [2, 2, 2, 2, 2] },
+      { id: "paper_writer", name: "Paper Writer", cn: "论文写作者", status: "queued", health: "unknown", task: "等待研究决策后生成大纲和初稿", stages: "16-17, 19", outputs: 0, triggers: 4, activeDays: 6, projectsDone: 2, workload: 31, onboardDays: 69, employment: "核心员工", skills: ["论文大纲", "方法描述", "结果叙述", "修改整合"], skillDesc: "擅长把研究计划、实验结果和审查意见整合成可投稿论文草稿。", points: [3, 3, 3, 3, 3] },
+      { id: "peer_reviewer", name: "Peer Reviewer", cn: "同行评审员", status: "idle", health: "unknown", task: "等待论文草稿进入评审和质量门控", stages: "18, 20", outputs: 0, triggers: 2, activeDays: 3, projectsDone: 1, workload: 16, onboardDays: 61, employment: "兼职评审", skills: ["逻辑审查", "质量门控", "反驳式评审", "风险指出"], skillDesc: "擅长从审稿人视角检查论证链、实验充分性和潜在拒稿风险。", points: [2, 2, 2, 2, 2] },
+      { id: "citation_auditor", name: "Citation Auditor", cn: "引用审计员", status: "idle", health: "unknown", task: "等待最终导出和引用校验", stages: "21-23", outputs: 0, triggers: 2, activeDays: 5, projectsDone: 3, workload: 19, onboardDays: 57, employment: "专项员工", skills: ["引用校验", "归档", "导出", "一致性检查"], skillDesc: "擅长检查引用、文件归档和最终导出物的一致性。", points: [3, 3, 3, 3, 3] }
+    ];
+
+    const researchFlow = [
+      {
+        title: "研究规划",
+        desc: "定题与指标",
+        owners: "研究策略师"
+      },
+      {
+        title: "文献综述",
+        desc: "检索与证据",
+        owners: "文献分析师"
+      },
+      {
+        title: "假设设计",
+        desc: "提出可验证假设",
+        owners: "假设设计师"
+      },
+      {
+        title: "实验验证",
+        desc: "实验与分析",
+        owners: "实验工程师 / 数据分析师"
+      },
+      {
+        title: "论文写作",
+        desc: "生成论文草稿",
+        owners: "论文写作者"
+      },
+      {
+        title: "审查归档",
+        desc: "质量与引用检查",
+        owners: "同行评审员 / 引用审计员"
+      }
+    ];
+
+    const projectStagePlan = [
+      { name: "研究定义", owner: "研究策略师", start: 0, span: 2, color: "green" },
+      { name: "文献发现", owner: "文献分析师", start: 2, span: 4, color: "cyan" },
+      { name: "知识综合", owner: "假设设计师", start: 6, span: 2, color: "green" },
+      { name: "实验构建", owner: "实验工程师", start: 8, span: 5, color: "amber" },
+      { name: "结果分析", owner: "数据分析师", start: 13, span: 2, color: "" },
+      { name: "论文生成", owner: "论文写作者", start: 15, span: 3, color: "green" },
+      { name: "质量审查", owner: "同行评审员", start: 18, span: 2, color: "amber" },
+      { name: "归档发布", owner: "引用审计员", start: 20, span: 3, color: "" }
+    ];
+
+    const risks = [
+      { project: "rc-gnn-drug", level: "高", type: "阻塞风险", status: "未阻塞", employee: "实验工程师", stage: "Stage 13", reason: "实验代码可以运行，但 metrics.json 产出契约尚未验证。", tried: "已完成 1 轮自动修复，等待下一次实验执行。", action: "确认 metrics 字段并重新运行阶段" },
+      { project: "rc-gnn-drug", level: "低", type: "等待", status: "等待上游", employee: "论文写作者", stage: "Stage 16", reason: "论文初稿需要数据分析师先给出统计结论。", tried: "已进入等待队列，未触发自动修复。", action: "等待 Stage 14-15 完成" },
+      { project: "rc-mm-survey", level: "高", type: "已阻塞", status: "阻塞中", employee: "文献分析师", stage: "Stage 5", reason: "shortlist 中弱相关综述过多，无法通过文献门控。", tried: "已尝试按关键词重排 2 次，仍需人工收紧纳入标准。", action: "进入部门产出页审查 shortlist.md" },
+      { project: "rc-rl-efficiency", level: "中", type: "资源冲突", status: "未开始", employee: "研究策略师", stage: "Stage 1", reason: "研究定义阶段与 GNN 项目的收敛检查存在同日占用。", tried: "已自动后移 1 天。", action: "确认是否优先启动该项目" },
+      { project: "rc-code-review", level: "低", type: "归档完成", status: "无风险", employee: "引用审计员", stage: "Stage 23", reason: "最终论文和引用清单已归档。", tried: "无需处理。", action: "查看最终产出" }
+    ];
+
+    const artifacts = [
+      { id: "a1", project: "rc-gnn-drug", employee: "research_strategist", title: "Research Plan", type: "markdown", stage: 1, status: "verified", path: "stage-01/research_plan.md", preview: "# Research Plan\n\nTopic: Graph neural networks for drug discovery.\n\nKey questions:\n- How robust is molecular generalization?\n- Which scaffold splits expose failure modes?" },
+      { id: "a2", project: "rc-gnn-drug", employee: "literature_analyst", title: "Literature Shortlist", type: "markdown", stage: 5, status: "verified", path: "stage-05/shortlist.md", preview: "# Literature Shortlist\n\n42 papers screened.\n\nTop clusters:\n1. Molecular graph pretraining\n2. Scaffold generalization\n3. Uncertainty calibration" },
+      { id: "a3", project: "rc-gnn-drug", employee: "literature_analyst", title: "Knowledge Cards", type: "jsonl", stage: 6, status: "generated", path: "stage-06/knowledge_cards.jsonl", preview: "{\"paper\":\"GraphMVP\",\"finding\":\"multi-view molecular pretraining improves OOD generalization\"}\n{\"paper\":\"MolCLR\",\"finding\":\"contrastive learning benefits low-label regimes\"}" },
+      { id: "a4", project: "rc-gnn-drug", employee: "hypothesis_designer", title: "Hypotheses", type: "yaml", stage: 8, status: "verified", path: "stage-08/hypotheses.yaml", preview: "hypotheses:\n  - id: H1\n    claim: scaffold-aware contrastive augmentation improves OOD AUROC\n  - id: H2\n    claim: calibration loss reduces overconfidence on rare scaffolds" },
+      { id: "a5", project: "rc-gnn-drug", employee: "experiment_engineer", title: "Experiment Plan", type: "yaml", stage: 9, status: "draft", path: "stage-09/experiment_plan.yaml", preview: "dataset: MoleculeNet\nsplit: scaffold\nbaselines:\n  - GCN\n  - GIN\n  - GraphMVP\nmetrics:\n  - AUROC\n  - ECE\nseeds: [1, 2, 3, 4, 5]" },
+      { id: "a6", project: "rc-gnn-drug", employee: "experiment_engineer", title: "Resource Plan", type: "markdown", stage: 11, status: "draft", path: "stage-11/resource_plan.md", preview: "# Resource Plan\n\nGPU preferred but CPU fallback allowed.\nTime budget: 300s per run.\nMemory budget: 4096 MB." },
+      { id: "a7", project: "rc-mm-survey", employee: "literature_analyst", title: "Multimodal Paper Pool", type: "json", stage: 4, status: "generated", path: "stage-04/papers.json", preview: "{\n  \"papers\": 128,\n  \"clusters\": [\"RAG\", \"vision-language\", \"scientific writing\"]\n}" },
+      { id: "a8", project: "rc-mm-survey", employee: "literature_analyst", title: "Review Gate Notes", type: "markdown", stage: 5, status: "draft", path: "stage-05/gate_notes.md", preview: "# Gate Notes\n\nBlocked: literature shortlist has too many weakly relevant survey papers.\nNeed stricter inclusion criteria." },
+      { id: "a9", project: "rc-code-review", employee: "paper_writer", title: "Final Paper", type: "pdf", stage: 22, status: "archived", path: "stage-22/final_paper.pdf", preview: "PDF preview placeholder: final paper is available through /api/artifacts/a9/raw." }
+    ];
+
+    function statusClass(health) {
+      if (health === "done") return "good";
+      if (health === "running") return "active";
+      if (health === "blocked" || health === "queued") return "warning";
+      if (health === "failed") return "critical";
+      if (health === "good") return "good";
+      if (health === "active") return "active";
+      if (health === "warning") return "warning";
+      if (health === "critical") return "critical";
+      return "warning";
+    }
+
+    function currentProject() {
+      return projects.find(project => project.id === selectedProjectId) || projects[0];
+    }
+
+    function filteredProjects(page = "monitor") {
+      const filter = pageFilters[page] || pageFilters.monitor;
+      return projects.filter(project => {
+        const matchesStatus = filter.status === "all" || project.status === filter.status;
+        const q = filter.search.trim().toLowerCase();
+        const matchesSearch = !q || `${project.name} ${project.topic} ${project.id}`.toLowerCase().includes(q);
+        return matchesStatus && matchesSearch;
+      });
+    }
+
+    function projectArtifacts() {
+      return artifacts.filter(item => item.project === selectedProjectId);
+    }
+
+    function renderProjectCards(page, containerId) {
+      const root = document.getElementById(containerId);
+      const rows = filteredProjects(page);
+      root.innerHTML = rows.map(project => {
+        const outputCount = artifacts.filter(item => item.project === project.id).length;
+        const footnote = page === "burndown"
+          ? `Stage ${project.stage}/23 · ${project.activeEmployeeCn}`
+          : page === "artifacts"
+            ? `${outputCount} outputs · 最近 ${project.latestOutput}`
+            : `${project.activeEmployeeCn} · 最近 ${project.latestOutput}`;
+        return `
+          <article class="project-card ${project.id === selectedProjectId ? "active" : ""}" data-project="${project.id}">
+            <div class="project-row">
+              <div class="project-card-title">${project.name}</div>
+              <span class="status-pill ${statusClass(project.status)}">${project.status}</span>
+            </div>
+            <div class="project-card-topic">${project.topic}</div>
+            <div class="project-progress"><span style="width:${project.progress}%"></span></div>
+            <div class="project-card-footer">
+              <span>${project.progress}%</span>
+              <span>${footnote}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+      root.querySelectorAll(".project-card").forEach(node => {
+        node.addEventListener("click", () => {
+          selectedProjectId = node.dataset.project;
+          renderAll();
+        });
+      });
+    }
+
+    function renderProjectContext() {
+      const project = currentProject();
+      const activeView = document.querySelector(".nav button.active")?.dataset.view || "monitor";
+      updatePageHeader(activeView);
+      document.getElementById("remainingPill").textContent = `${project.remaining} remaining`;
+      document.getElementById("burnDetailTitle").textContent = project.name;
+      const burnDetailSubtitle = document.getElementById("burnDetailSubtitle");
+      if (burnDetailSubtitle) {
+        burnDetailSubtitle.textContent = `Stage ${project.stage}/23 · ${project.activeEmployeeCn}`;
+      }
+    }
+
+    function renderResearchFlow() {
+      document.getElementById("researchFlow").innerHTML = researchFlow.map(step => `
+          <div class="flow-step">
+            <div class="flow-title">${step.title}</div>
+            <div class="flow-desc">${step.desc}</div>
+            <div class="flow-owner">${step.owners}</div>
+          </div>
+        `).join("");
+    }
+
+    function renderEmployees() {
+      const list = document.getElementById("employeeList");
+      list.innerHTML = employees.map(emp => {
+        const activeProject = projects.find(project => project.activeEmployee === emp.id);
+        const projectText = activeProject ? `当前项目：${activeProject.name}` : "当前项目：待分配";
+        return `
+        <article class="employee ${emp.id === selectedEmployeeId ? "active" : ""}" data-employee="${emp.id}">
+          <div>
+            <div class="employee-name">${emp.cn} · ${emp.name}</div>
+            <div class="employee-task">当前：${emp.task}</div>
+            <div class="employee-meta">${projectText}<br>负责阶段：${emp.stages} · 已产出 ${emp.outputs}</div>
+          </div>
+          <span class="status-pill ${statusClass(emp.health)}">${emp.status}</span>
+        </article>
+      `;
+      }).join("");
+      list.querySelectorAll(".employee").forEach(node => {
+        node.addEventListener("click", () => {
+          selectedEmployeeId = node.dataset.employee;
+          renderEmployees();
+          renderEmployeeWorkspace();
+          openEmployeeDrawer();
+        });
+      });
+      renderEmployeeWorkspace();
+    }
+
+    function openEmployeeDrawer() {
+      employeeDrawerOpen = true;
+      document.getElementById("employeeDrawer").classList.add("open");
+      document.getElementById("employeeDrawerBackdrop").classList.add("open");
+    }
+
+    function closeEmployeeDrawer() {
+      employeeDrawerOpen = false;
+      document.getElementById("employeeDrawer").classList.remove("open");
+      document.getElementById("employeeDrawerBackdrop").classList.remove("open");
+    }
+
+    function heatLevel(emp, index) {
+      const seed = emp.id.split("").reduce((sum, char) => sum + char.charCodeAt(0), 0);
+      const value = (seed + index * 7 + Math.floor(index / 5) * emp.outputs + emp.workload) % 11;
+      if (value > 8) return 4;
+      if (value > 6) return 3;
+      if (value > 4) return 2;
+      if (value > 2) return 1;
+      return 0;
+    }
+
+    function renderEmployeeWorkspace() {
+      const emp = employees.find(item => item.id === selectedEmployeeId) || employees[0];
+      const activeProject = projects.find(project => project.activeEmployee === emp.id);
+      document.getElementById("employeeFocus").innerHTML = `
+        <div class="profile-head">
+          <div class="avatar-card" aria-hidden="true"></div>
+          <div>
+            <div class="profile-name">${emp.cn} ${emp.name}</div>
+            <div class="profile-meta">
+              ${emp.status} · 负责 Stage ${emp.stages}<br>
+              ${activeProject ? `正在推进：${activeProject.name}` : "当前无绑定项目，等待任务"}
+            </div>
+          </div>
+        </div>
+        <div class="employee-task">当前：${emp.task}</div>
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-value">${emp.onboardDays}</div>
+            <div class="profile-stat-label">入职天数</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value">${emp.projectsDone}</div>
+            <div class="profile-stat-label">累计完成项目</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value">${emp.activeDays}</div>
+            <div class="profile-stat-label">近 30 周活跃日</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value">${emp.triggers}</div>
+            <div class="profile-stat-label">触发器响应</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value">${emp.outputs}</div>
+            <div class="profile-stat-label">当前产出</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-value">${emp.workload}%</div>
+            <div class="profile-stat-label">当前负载</div>
+          </div>
+        </div>
+        <div class="personnel-info">
+          <div class="personnel-row"><span>员工类型</span><strong>${emp.employment}</strong></div>
+          <div class="personnel-row"><span>当前负载</span><strong>${emp.workload}%</strong></div>
+          <div class="personnel-row"><span>触发器响应</span><strong>${emp.triggers} 次</strong></div>
+          <div class="personnel-row"><span>负责阶段</span><strong>Stage ${emp.stages}</strong></div>
+        </div>
+        <div class="skills">
+          <div class="employee-name">核心技能</div>
+          <div class="skill-tags">${emp.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join("")}</div>
+          <div class="skill-desc">${emp.skillDesc}</div>
+        </div>
+      `;
+      document.getElementById("employeeHeatmap").innerHTML = Array.from({ length: 210 }, (_, index) => {
+        const level = heatLevel(emp, index);
+        return `<span class="heat-cell ${level ? `l${level}` : ""}" title="week ${Math.floor(index / 7) + 1}, day ${index % 7 + 1}"></span>`;
+      }).join("");
+    }
+
+    function renderProjectGantt() {
+      const project = currentProject();
+      const weeks = Array.from({ length: 23 }, (_, index) => `S${index + 1}`);
+      const rows = projectStagePlan.map(item => {
+        const firstStage = item.start + 1;
+        const lastStage = item.start + item.span;
+        const isDone = project.stage > lastStage;
+        const isActive = project.stage >= firstStage && project.stage <= lastStage;
+        const isBlocked = isActive && project.status === "blocked";
+        const barClass = isDone ? "green" : isActive ? `cyan ${isBlocked ? "blocked" : ""}` : "muted";
+        const label = isActive ? `${item.name} · 当前` : item.name;
+        const bar = `<div class="gantt-bar ${barClass}" style="left: calc(${item.start} * (100% / 23) + 6px); width: calc(${item.span} * (100% / 23) - 12px);" title="${item.name} · ${item.owner} · Stage ${firstStage}-${lastStage}">${label}</div>`;
+        return `
+          <div class="gantt-row" style="grid-template-columns: 170px repeat(23, minmax(42px, 1fr)); min-width: 1120px;">
+            <div class="gantt-name">
+              <div class="gantt-employee">${item.name}</div>
+              <div class="gantt-task">${item.owner}</div>
+            </div>
+            <div class="gantt-track" style="grid-template-columns: repeat(23, minmax(42px, 1fr));">
+              ${weeks.map(() => "<span></span>").join("")}
+              ${bar}
+            </div>
+          </div>
+        `;
+      }).join("");
+      document.getElementById("projectGantt").innerHTML = `
+        <div class="gantt-header" style="grid-template-columns: 170px repeat(23, minmax(42px, 1fr)); min-width: 1120px;">
+          <div class="gantt-cell">阶段 / 负责人</div>
+          ${weeks.map(day => `<div class="gantt-cell">${day}</div>`).join("")}
+        </div>
+        ${rows}
+      `;
+    }
+
+    function renderRisks() {
+      const root = document.getElementById("riskList");
+      if (!root) return;
+      const rows = risks.filter(item => item.project === selectedProjectId);
+      root.innerHTML = rows.map((risk, index) => {
+        const pillClass = risk.level === "高" ? "critical" : risk.level === "中" ? "warning" : "good";
+        return `
+          <div class="risk-item">
+            <div class="risk-title">${risk.level} · ${risk.type}</div>
+            <div class="risk-meta">
+              ${risk.employee} / ${risk.stage}<br>
+              状态：${risk.status}<br>
+              原因：${risk.reason}
+            </div>
+            <details ${index === 0 ? "open" : ""}>
+              <summary class="status-pill ${pillClass}" style="margin-top:10px; cursor:pointer;">查看原因</summary>
+              <div class="risk-meta" style="margin-top:10px;">
+                已尝试：${risk.tried}<br>
+                建议：${risk.action}
+              </div>
+              <div class="risk-actions">
+                <button class="btn">查看相关产出</button>
+                <button class="btn">重新运行阶段</button>
+              </div>
+            </details>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderArtifacts(employee = "all") {
+      const grid = document.getElementById("artifactGrid");
+      const scopedArtifacts = projectArtifacts();
+      const selected = employee === "all" ? scopedArtifacts : scopedArtifacts.filter(item => item.employee === employee);
+      grid.innerHTML = selected.map(item => {
+        const emp = employees.find(e => e.id === item.employee);
+        const project = projects.find(p => p.id === item.project);
+        return `
+          <article class="artifact" data-artifact="${item.id}">
+            <div>
+              <div class="artifact-title">${item.title}</div>
+              <div class="artifact-meta">${project ? project.name : item.project}<br>${emp ? emp.cn : item.employee} · stage-${String(item.stage).padStart(2, "0")} · ${item.path}</div>
+            </div>
+            <div class="artifact-footer">
+              <span class="type">${item.type}</span>
+              <span class="status-pill ${item.status === "verified" ? "good" : "active"}">${item.status}</span>
+            </div>
+            <div class="quick-actions">
+              <button class="btn">查看</button>
+              <button class="btn">下载</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+      grid.querySelectorAll(".artifact").forEach(node => {
+        node.addEventListener("click", () => {
+          const item = artifacts.find(entry => entry.id === node.dataset.artifact);
+          if (item) console.log("artifact selected", item.id);
+        });
+      });
+    }
+
+    document.querySelectorAll(".nav button").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".nav button").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.view).classList.add("active");
+        updatePageHeader(button.dataset.view);
+        if (button.dataset.view !== "monitor") closeEmployeeDrawer();
+      });
+    });
+
+    document.getElementById("employeeDrawerClose").addEventListener("click", closeEmployeeDrawer);
+    document.getElementById("employeeDrawerBackdrop").addEventListener("click", closeEmployeeDrawer);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && employeeDrawerOpen) closeEmployeeDrawer();
+    });
+
+    function updatePageHeader(view) {
+      const title = document.getElementById("pageTitle");
+      const subtitle = document.getElementById("pageSubtitle");
+      const actions = document.getElementById("pageActions");
+      if (view === "burndown") {
+        title.textContent = "项目进展";
+        subtitle.textContent = "选择项目后查看阶段计划、负责人和推进风险。";
+        actions.innerHTML = `
+          <button class="btn">暂停项目</button>
+          <button class="btn primary">重新运行阶段</button>
+        `;
+      } else if (view === "artifacts") {
+        title.textContent = "部门产出";
+        subtitle.textContent = "按项目和数字员工查看科研产出，并在产出页完成审查、修改和指导。";
+        actions.innerHTML = `
+          <button class="btn primary">提交指导</button>
+          <button class="btn">要求重新生成</button>
+        `;
+      } else {
+        title.textContent = "部门概况";
+        subtitle.textContent = "从部门视角查看运行任务、数字员工状态和自动科研流程。";
+        actions.innerHTML = `<button class="btn primary">新建研究任务</button>`;
+      }
+    }
+
+    function renderAll() {
+      renderProjectContext();
+      renderProjectCards("monitor", "monitorProjectCards");
+      renderProjectCards("burndown", "burndownProjectCards");
+      renderProjectCards("artifacts", "artifactProjectCards");
+      renderResearchFlow();
+      renderEmployees();
+      renderProjectGantt();
+      renderRisks();
+      renderArtifacts();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
