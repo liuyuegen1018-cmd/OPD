@@ -1863,6 +1863,384 @@
     }
 
 
+    /* ============ 数字看板 ============ */
+    .dashboard-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::after {
+      content: "";
+      position: absolute;
+      right: -24px;
+      top: -24px;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      opacity: 0.08;
+      background: var(--blue);
+    }
+
+    .kpi-card.kpi-green::after { background: var(--green); }
+    .kpi-card.kpi-amber::after { background: var(--amber); }
+    .kpi-card.kpi-violet::after { background: var(--violet); }
+
+    .kpi-label {
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kpi-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: #eaf1ff;
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .kpi-card.kpi-green .kpi-icon { background: #e7f6ef; color: var(--green); }
+    .kpi-card.kpi-amber .kpi-icon { background: #fff6df; color: var(--amber); }
+    .kpi-card.kpi-violet .kpi-icon { background: #f1ecfa; color: var(--violet); }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 820;
+      line-height: 1.1;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .kpi-value .unit {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-left: 3px;
+    }
+
+    .kpi-sub {
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .kpi-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .kpi-trend.up { color: var(--green); background: #e7f6ef; }
+    .kpi-trend.down { color: var(--red); background: #fff0ee; }
+    .kpi-trend.flat { color: var(--muted); background: #eef2f7; }
+
+    /* 论文卡片 */
+    .paper-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-chip {
+      height: 30px;
+      padding: 0 12px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--muted);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .filter-chip.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .filter-chip .chip-count {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 680;
+    }
+
+    .filter-chip:not(.active) .chip-count {
+      background: #eef2f7;
+      color: var(--muted);
+    }
+
+    .paper-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+
+    .paper-card {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(34, 45, 70, 0.04);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(34, 45, 70, 0.09);
+    }
+
+    .paper-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--blue);
+    }
+
+    .paper-card.paper-done::before { background: var(--green); }
+    .paper-card.paper-failed::before { background: var(--red); }
+    .paper-card.paper-blocked::before,
+    .paper-card.paper-rejected::before { background: var(--amber); }
+    .paper-card.paper-scheduled::before,
+    .paper-card.paper-queued::before { background: #9ca3af; }
+    .paper-card.paper-interrupted::before { background: var(--amber); }
+
+    .paper-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .paper-title {
+      font-size: 15px;
+      font-weight: 750;
+      line-height: 1.38;
+      color: var(--text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .paper-abstract {
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      min-height: 58px;
+    }
+
+    .paper-abstract.is-loading {
+      color: #b4bac7;
+      font-style: italic;
+    }
+
+    .paper-abstract.is-empty {
+      color: #b4bac7;
+    }
+
+    .paper-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .paper-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .paper-meta-item strong {
+      color: var(--text);
+      font-weight: 680;
+    }
+
+    /* 图表通用 */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 14px;
+    }
+
+    .chart-grid-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .chart-canvas {
+      width: 100%;
+      padding: 12px 14px 14px;
+    }
+
+    .chart-canvas svg {
+      width: 100%;
+      display: block;
+      overflow: visible;
+    }
+
+    .chart-empty {
+      padding: 42px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .chart-empty-hint {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #a7b0c0;
+    }
+
+    .chart-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      padding: 6px 12px 0;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    /* 产出节奏折线图 */
+    .trend-axis-line { stroke: var(--border); stroke-width: 1; }
+    .trend-axis-text { fill: var(--muted); font-size: 11px; }
+    .trend-grid-line { stroke: #edf1f7; stroke-width: 1; stroke-dasharray: 3 3; }
+    .trend-line-count { stroke: var(--blue); stroke-width: 2.2; fill: none; }
+    .trend-line-duration { stroke: var(--amber); stroke-width: 2.2; fill: none; stroke-dasharray: 5 4; }
+    .trend-area { fill: var(--blue); opacity: 0.08; }
+    .trend-dot-count { fill: var(--blue); stroke: #fff; stroke-width: 1.5; }
+    .trend-dot-duration { fill: var(--amber); stroke: #fff; stroke-width: 1.5; }
+
+    /* Stage 耗时热力图 */
+    .heat-cell-rect {
+      rx: 4;
+      ry: 4;
+      stroke: #fff;
+      stroke-width: 2;
+    }
+
+    .heat-cell-rect.lvl-0 { fill: #f1f4f9; }
+    .heat-cell-rect.lvl-1 { fill: #d4e2fb; }
+    .heat-cell-rect.lvl-2 { fill: #a7c3f5; }
+    .heat-cell-rect.lvl-3 { fill: #6e96e8; }
+    .heat-cell-rect.lvl-4 { fill: #3d6ed2; }
+    .heat-cell-rect.lvl-5 { fill: #1f4aa8; }
+    .heat-cell-rect.empty { fill: #f8fafc; stroke-dasharray: 2 2; stroke: #dde3ee; }
+
+    .heat-axis-text { fill: var(--muted); font-size: 11px; }
+    .heat-legend-stop-0 { fill: #f1f4f9; }
+    .heat-legend-stop-1 { fill: #d4e2fb; }
+    .heat-legend-stop-2 { fill: #a7c3f5; }
+    .heat-legend-stop-3 { fill: #6e96e8; }
+    .heat-legend-stop-4 { fill: #3d6ed2; }
+    .heat-legend-stop-5 { fill: #1f4aa8; }
+
+    /* 产物类型饼图 */
+    .pie-slice {
+      stroke: #fff;
+      stroke-width: 2;
+      cursor: default;
+    }
+    .pie-center-number {
+      fill: var(--text);
+      font-size: 22px;
+      font-weight: 820;
+      text-anchor: middle;
+    }
+    .pie-center-label {
+      fill: var(--muted);
+      font-size: 11px;
+      text-anchor: middle;
+    }
+
+    /* 主题词云 */
+    .wordcloud-wrap {
+      min-height: 210px;
+      padding: 8px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .word-chip {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      padding: 3px 6px;
+      border-radius: 6px;
+      font-weight: 700;
+      transition: transform 120ms ease;
+      cursor: default;
+    }
+
+    .word-chip:hover { transform: scale(1.08); }
+
+    .word-chip.tone-blue { color: var(--blue); }
+    .word-chip.tone-green { color: var(--green); }
+    .word-chip.tone-violet { color: var(--violet); }
+    .word-chip.tone-amber { color: var(--amber); }
+    .word-chip.tone-cyan { color: var(--cyan); }
+    .word-chip.tone-muted { color: #6b7a90; }
+
+
     @media (max-width: 1100px) {
       .shell { grid-template-columns: 1fr; }
       .sidebar { position: static; }
@@ -1873,6 +2251,9 @@
       .mini-charts { grid-template-columns: repeat(2, minmax(160px, 1fr)); }
       .project-cards { grid-template-columns: repeat(2, minmax(180px, 1fr)); }
       .guide-scope { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .chart-grid,
+      .chart-grid-bottom { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 680px) {
@@ -1896,6 +2277,8 @@
       .guide-scope { grid-template-columns: 1fr; }
       .chart { height: 260px; }
       .status-tabs { grid-template-columns: repeat(2, 1fr); }
+      .kpi-row { grid-template-columns: 1fr; }
+      .paper-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1928,13 +2311,13 @@
           <span>物料管理</span>
         </button>
         <button data-view="dashboard">
-          <span class="nav-icon">📊</span>
+          <span class="nav-icon">◉</span>
           <span>数字看板</span>
         </button>
       </nav>
 
       <div class="sidebar-note">
-        部门概况展示团队运行状态，项目管理跟踪项目进度，员工管理维护数字员工与排班，物料管理集中处理科研成果，数字看板呈现论文产出与效能分析。
+        部门概况展示团队运行状态，项目管理跟踪项目进度，员工管理维护数字员工与排班，物料管理集中处理科研成果，数字看板汇总科研产出与效能分析。
       </div>
     </aside>
 
@@ -2099,6 +2482,70 @@
             </div>
             <div class="panel-body">
               <div class="artifact-grid" id="artifactGrid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="view">
+        <div class="dashboard-grid">
+          <div class="kpi-row" id="kpiRow"></div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">论文档案</div>
+                <div class="panel-subtitle">所有科研项目的标题、状态、摘要和协作信息</div>
+              </div>
+              <div class="paper-filter-bar" id="paperFilterBar"></div>
+            </div>
+            <div class="panel-body">
+              <div class="paper-grid" id="paperGrid"></div>
+            </div>
+          </div>
+
+          <div class="chart-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">产出节奏</div>
+                  <div class="panel-subtitle">按周聚合的论文完成数与平均耗时</div>
+                </div>
+                <span class="status-pill active" id="trendRangePill">最近 8 周</span>
+              </div>
+              <div class="chart-canvas" id="trendChart"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">主题词云</div>
+                  <div class="panel-subtitle">从所有项目主题中提取的关键词，字号代表出现频次</div>
+                </div>
+              </div>
+              <div class="chart-canvas" id="themeCloud"></div>
+            </div>
+          </div>
+
+          <div class="chart-grid-bottom">
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">Stage 耗时热力图</div>
+                  <div class="panel-subtitle">每个项目各阶段的实际耗时，颜色越深耗时越长</div>
+                </div>
+              </div>
+              <div class="chart-canvas" id="stageHeatmap"></div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <div class="panel-title">产物类型分布</div>
+                  <div class="panel-subtitle">所有项目产物按文件类型的占比</div>
+                </div>
+              </div>
+              <div class="chart-canvas" id="artifactPie"></div>
             </div>
           </div>
         </div>
@@ -3858,6 +4305,10 @@
         title.textContent = "物料管理";
         subtitle.textContent = "查看科研成果文件，并完成审查、修改和指导。";
         actions.innerHTML = refreshBtn;
+      } else if (view === "dashboard") {
+        title.textContent = "数字看板";
+        subtitle.textContent = "汇总所有科研项目的档案、效率指标和主题分布。";
+        actions.innerHTML = refreshBtn;
       } else {
         title.textContent = "部门概况";
         subtitle.textContent = "查看工作流程、数字员工状态和项目运行情况。";
@@ -3902,6 +4353,7 @@
       renderRisks();
       renderApprovals();
       renderArtifacts();
+      renderDashboard();
     }
 
     // 手动刷新函数
@@ -3921,6 +4373,746 @@
           btn.textContent = "刷新";
         }
       }
+    }
+
+    // ============ 数字看板 ============
+    let dashboardPaperFilter = "all";
+    const abstractCache = new Map(); // key: runId → { text, status: 'loading'|'done'|'empty' }
+
+    const DASHBOARD_STATUS_LABELS = {
+      all: "全部",
+      done: "已完成",
+      running: "运行中",
+      blocked: "待处理",
+      rejected: "待处理",
+      failed: "失败",
+      scheduled: "计划中",
+      queued: "排队中",
+      interrupted: "已打断"
+    };
+
+    function dashboardStatusGroup(status) {
+      if (status === "rejected") return "blocked";
+      return status || "queued";
+    }
+
+    // ---------- 指标聚合 ----------
+    function stageDurationsOfProject(project) {
+      // 返回 Map<stage, seconds>，基于 timeline 事件推断
+      const result = new Map();
+      const timeline = project.timeline || [];
+      if (!timeline.length) return result;
+
+      const sorted = [...timeline].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+      const startedAt = new Map(); // stage → Date
+
+      for (const event of sorted) {
+        const ts = new Date(event.timestamp);
+        if (Number.isNaN(ts.getTime())) continue;
+        const stage = Number(event.stage);
+
+        if (event.type === "stage_started" && stage) {
+          startedAt.set(stage, ts);
+        } else if (["stage_completed", "stage_failed", "approval_required"].includes(event.type) && stage) {
+          const begin = startedAt.get(stage);
+          if (begin) {
+            const sec = Math.max(1, Math.round((ts.getTime() - begin.getTime()) / 1000));
+            // 如果多次有完成事件，保留最大值
+            result.set(stage, Math.max(result.get(stage) || 0, sec));
+          }
+        }
+      }
+
+      // 对于 running 项目，当前阶段没结束：用 now - started 估算（只在该 stage 已 started 且未完成时）
+      const now = new Date();
+      for (const [stage, begin] of startedAt.entries()) {
+        if (!result.has(stage)) {
+          const sec = Math.max(1, Math.round((now.getTime() - begin.getTime()) / 1000));
+          result.set(stage, sec);
+        }
+      }
+      return result;
+    }
+
+    function totalRunDurationSeconds(project) {
+      const timeline = project.timeline || [];
+      if (!timeline.length) return 0;
+      const times = timeline
+        .map(event => new Date(event.timestamp).getTime())
+        .filter(value => !Number.isNaN(value));
+      if (!times.length) return 0;
+      const start = Math.min(...times);
+      const end = project.status === "done" || project.status === "failed"
+        ? Math.max(...times)
+        : Date.now();
+      return Math.max(0, Math.round((end - start) / 1000));
+    }
+
+    function formatDuration(sec) {
+      if (!sec) return "—";
+      if (sec < 60) return `${sec}s`;
+      const m = Math.floor(sec / 60);
+      if (m < 60) return `${m}m`;
+      const h = Math.floor(m / 60);
+      const rm = m % 60;
+      return rm ? `${h}h${rm}m` : `${h}h`;
+    }
+
+    function formatRelativeDate(value) {
+      if (!value) return "—";
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "—";
+      const diff = Date.now() - date.getTime();
+      const min = Math.floor(diff / 60000);
+      if (min < 1) return "刚刚";
+      if (min < 60) return `${min} 分钟前`;
+      const hour = Math.floor(min / 60);
+      if (hour < 24) return `${hour} 小时前`;
+      const day = Math.floor(hour / 24);
+      if (day < 30) return `${day} 天前`;
+      const month = Math.floor(day / 30);
+      if (month < 12) return `${month} 个月前`;
+      return `${Math.floor(month / 12)} 年前`;
+    }
+
+    function countParticipatingEmployees(project) {
+      const ids = new Set();
+      const assignments = projectEmployeeAssignments[project.id];
+      if (assignments) {
+        Object.values(assignments).forEach(value => { if (value) ids.add(value); });
+      }
+      for (const event of project.timeline || []) {
+        if (event.employee_id) ids.add(event.employee_id);
+      }
+      if (project.activeEmployee) ids.add(project.activeEmployee);
+      return ids.size;
+    }
+
+    function computeKpis() {
+      const total = projects.length;
+      const done = projects.filter(p => p.status === "done").length;
+
+      // 本月新增：updated 时间戳落在本月的项目
+      const now = new Date();
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      const monthNew = projects.filter(p => {
+        const ts = (p.timeline || []).map(e => new Date(e.timestamp).getTime()).filter(v => !Number.isNaN(v));
+        const latest = ts.length ? Math.max(...ts) : 0;
+        return latest >= monthStart;
+      }).length;
+
+      // 平均每篇论文的总耗时（只计已完成）
+      const doneDurations = projects
+        .filter(p => p.status === "done")
+        .map(totalRunDurationSeconds)
+        .filter(v => v > 0);
+      const avgSec = doneDurations.length
+        ? Math.round(doneDurations.reduce((s, v) => s + v, 0) / doneDurations.length)
+        : 0;
+
+      // HITL 介入率 = 有 approval_required / 有 HITL 的项目占比
+      const hitlProjects = projects.filter(p =>
+        (p.timeline || []).some(e => e.type === "approval_required")
+      ).length;
+      const hitlRate = total ? Math.round((hitlProjects / total) * 100) : 0;
+
+      return { total, done, monthNew, avgSec, hitlRate, hitlProjects };
+    }
+
+    // ---------- KPI ----------
+    function renderKpis() {
+      const { total, done, monthNew, avgSec, hitlRate, hitlProjects } = computeKpis();
+      const root = document.getElementById("kpiRow");
+      root.innerHTML = `
+        <div class="kpi-card kpi-green">
+          <div class="kpi-label"><span class="kpi-icon">◆</span>累计论文</div>
+          <div class="kpi-value">${done}<span class="unit">/ ${total}</span></div>
+          <div class="kpi-sub">
+            <span class="kpi-trend ${total ? "up" : "flat"}">${total ? `${Math.round((done / total) * 100)}% 完成率` : "暂无数据"}</span>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label"><span class="kpi-icon">↑</span>本月活跃项目</div>
+          <div class="kpi-value">${monthNew}</div>
+          <div class="kpi-sub">${total ? `占总项目 ${Math.round((monthNew / total) * 100)}%` : "暂无数据"}</div>
+        </div>
+        <div class="kpi-card kpi-amber">
+          <div class="kpi-label"><span class="kpi-icon">◷</span>平均论文耗时</div>
+          <div class="kpi-value">${avgSec ? formatDuration(avgSec) : "—"}</div>
+          <div class="kpi-sub">基于 ${done} 篇已完成论文</div>
+        </div>
+        <div class="kpi-card kpi-violet">
+          <div class="kpi-label"><span class="kpi-icon">✦</span>HITL 介入率</div>
+          <div class="kpi-value">${hitlRate}<span class="unit">%</span></div>
+          <div class="kpi-sub">${hitlProjects} 个项目触发过人工审批</div>
+        </div>
+      `;
+    }
+
+    // ---------- 论文卡片 ----------
+    function fetchAbstract(runId) {
+      if (abstractCache.has(runId)) return;
+      abstractCache.set(runId, { text: "", status: "loading" });
+      const paperArtifact = artifacts.find(a =>
+        a.project === runId &&
+        (a.path.includes("paper") || a.path.includes("review") || a.path.includes("literature")) &&
+        /\.(md|txt)$/i.test(a.path)
+      ) || artifacts.find(a => a.project === runId && /\.(md|txt)$/i.test(a.path));
+
+      if (!paperArtifact) {
+        abstractCache.set(runId, { text: "", status: "empty" });
+        renderPaperCards();
+        return;
+      }
+
+      api(`/api/artifacts/${encodeURIComponent(paperArtifact.id)}/content`)
+        .then(payload => {
+          const raw = payload?.content || payload?.text || "";
+          const firstPara = extractFirstParagraph(raw);
+          abstractCache.set(runId, {
+            text: firstPara,
+            status: firstPara ? "done" : "empty"
+          });
+          renderPaperCards();
+        })
+        .catch(() => {
+          abstractCache.set(runId, { text: "", status: "empty" });
+          renderPaperCards();
+        });
+    }
+
+    function extractFirstParagraph(raw) {
+      if (!raw) return "";
+      const lines = raw.split(/\r?\n/);
+      let buffer = [];
+      let started = false;
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        // 跳过 frontmatter 分隔线、代码块标记、空白起始
+        if (!started && (line === "" || line.startsWith("---") || line.startsWith("```"))) continue;
+        // 跳过 markdown 标题行
+        if (line.startsWith("#")) {
+          if (started) break;
+          continue;
+        }
+        if (line === "") {
+          if (started) break;
+          continue;
+        }
+        started = true;
+        buffer.push(line);
+        if (buffer.join(" ").length > 220) break;
+      }
+      const joined = buffer.join(" ").replace(/\s+/g, " ").trim();
+      return joined.length > 240 ? joined.slice(0, 240) + "…" : joined;
+    }
+
+    function renderPaperFilterBar() {
+      const root = document.getElementById("paperFilterBar");
+      const groups = { all: projects.length };
+      for (const project of projects) {
+        const key = dashboardStatusGroup(project.status);
+        groups[key] = (groups[key] || 0) + 1;
+      }
+      const order = ["all", "done", "running", "blocked", "failed", "scheduled"];
+      root.innerHTML = order
+        .filter(key => key === "all" || (groups[key] || 0) > 0)
+        .map(key => `
+          <button class="filter-chip ${dashboardPaperFilter === key ? "active" : ""}" data-filter="${key}">
+            ${DASHBOARD_STATUS_LABELS[key] || key}
+            <span class="chip-count">${groups[key] || 0}</span>
+          </button>
+        `).join("");
+      root.querySelectorAll("[data-filter]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          dashboardPaperFilter = btn.dataset.filter;
+          renderPaperFilterBar();
+          renderPaperCards();
+        });
+      });
+    }
+
+    function renderPaperCards() {
+      const root = document.getElementById("paperGrid");
+      if (!root) return;
+      if (!projects.length) {
+        root.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 32px 16px; text-align: center; color: var(--muted);">
+            暂无科研项目，创建第一个项目后，这里会展示论文档案。
+          </div>
+        `;
+        return;
+      }
+
+      const filtered = projects.filter(project =>
+        dashboardPaperFilter === "all" ||
+        dashboardStatusGroup(project.status) === dashboardPaperFilter
+      );
+      if (!filtered.length) {
+        root.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 32px 16px; text-align: center; color: var(--muted);">
+            该状态下暂无项目。
+          </div>
+        `;
+        return;
+      }
+
+      root.innerHTML = filtered.map(project => {
+        const statusGroup = dashboardStatusGroup(project.status);
+        const cache = abstractCache.get(project.id);
+        let abstractHtml;
+        if (!cache) {
+          abstractHtml = `<div class="paper-abstract is-loading">正在提取摘要…</div>`;
+          // 异步触发
+          setTimeout(() => fetchAbstract(project.id), 0);
+        } else if (cache.status === "loading") {
+          abstractHtml = `<div class="paper-abstract is-loading">正在提取摘要…</div>`;
+        } else if (cache.status === "done" && cache.text) {
+          abstractHtml = `<div class="paper-abstract">${escapeHtml(cache.text)}</div>`;
+        } else {
+          const placeholder = project.topic
+            ? `基于"${escapeHtml(project.topic).slice(0, 80)}"的研究项目，当前暂无可读的产物摘要。`
+            : "当前项目尚未产出可读的文档摘要。";
+          abstractHtml = `<div class="paper-abstract is-empty">${placeholder}</div>`;
+        }
+
+        const empCount = countParticipatingEmployees(project);
+        const lastTimestamp = (project.timeline || [])
+          .map(event => new Date(event.timestamp).getTime())
+          .filter(value => !Number.isNaN(value));
+        const lastUpdated = lastTimestamp.length ? Math.max(...lastTimestamp) : 0;
+
+        return `
+          <article class="paper-card paper-${statusGroup}" data-run="${project.id}">
+            <div class="paper-head">
+              <div class="paper-title">${escapeHtml(project.name || project.topic || project.id)}</div>
+              <span class="status-pill ${statusClass(project.status)}">${project.statusText}</span>
+            </div>
+            ${abstractHtml}
+            <div class="paper-meta-row">
+              <span class="paper-meta-item"><strong>${empCount}</strong> 名员工</span>
+              <span class="paper-meta-item">${lastUpdated ? formatRelativeDate(new Date(lastUpdated)) : "未更新"}</span>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      root.querySelectorAll(".paper-card").forEach(card => {
+        card.addEventListener("click", () => {
+          selectedProjectId = card.dataset.run;
+          document.querySelectorAll(".nav button").forEach(btn => btn.classList.remove("active"));
+          document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+          const targetBtn = document.querySelector('.nav button[data-view="burndown"]');
+          if (targetBtn) targetBtn.classList.add("active");
+          document.getElementById("burndown").classList.add("active");
+          updatePageHeader("burndown");
+          renderAll();
+        });
+      });
+    }
+
+    function escapeHtml(text) {
+      return String(text == null ? "" : text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    // ---------- 产出节奏折线图 ----------
+    function buildWeeklyBuckets(weeksBack = 8) {
+      const buckets = [];
+      const now = new Date();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      // 对齐到周一
+      const dayOfWeek = (todayStart.getDay() + 6) % 7;
+      const currentWeekStart = new Date(todayStart);
+      currentWeekStart.setDate(todayStart.getDate() - dayOfWeek);
+
+      for (let i = weeksBack - 1; i >= 0; i--) {
+        const start = new Date(currentWeekStart);
+        start.setDate(currentWeekStart.getDate() - i * 7);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 7);
+        buckets.push({
+          start,
+          end,
+          label: `${start.getMonth() + 1}/${start.getDate()}`,
+          count: 0,
+          durationSum: 0,
+          durationCount: 0
+        });
+      }
+
+      for (const project of projects) {
+        if (project.status !== "done") continue;
+        const times = (project.timeline || [])
+          .map(event => new Date(event.timestamp).getTime())
+          .filter(value => !Number.isNaN(value));
+        if (!times.length) continue;
+        const completeTime = Math.max(...times);
+        for (const bucket of buckets) {
+          if (completeTime >= bucket.start.getTime() && completeTime < bucket.end.getTime()) {
+            bucket.count += 1;
+            const dur = totalRunDurationSeconds(project);
+            if (dur > 0) {
+              bucket.durationSum += dur;
+              bucket.durationCount += 1;
+            }
+            break;
+          }
+        }
+      }
+      return buckets;
+    }
+
+    function renderTrendChart() {
+      const root = document.getElementById("trendChart");
+      if (!root) return;
+      const buckets = buildWeeklyBuckets(8);
+      const totalDone = buckets.reduce((sum, b) => sum + b.count, 0);
+
+      if (totalDone === 0) {
+        root.innerHTML = `
+          <div class="chart-empty">
+            暂无已完成项目
+            <div class="chart-empty-hint">项目归档后，这里会展示完成数量和平均耗时的趋势</div>
+          </div>
+        `;
+        return;
+      }
+
+      const width = 560;
+      const height = 220;
+      const padL = 40;
+      const padR = 40;
+      const padT = 20;
+      const padB = 34;
+      const innerW = width - padL - padR;
+      const innerH = height - padT - padB;
+
+      const maxCount = Math.max(1, ...buckets.map(b => b.count));
+      const avgDurations = buckets.map(b => b.durationCount ? b.durationSum / b.durationCount : 0);
+      const maxDur = Math.max(1, ...avgDurations);
+
+      const xStep = innerW / Math.max(1, buckets.length - 1);
+      const pointsCount = buckets.map((b, i) => {
+        const x = padL + i * xStep;
+        const y = padT + innerH - (b.count / maxCount) * innerH;
+        return [x, y];
+      });
+      const pointsDur = buckets.map((b, i) => {
+        const x = padL + i * xStep;
+        const dur = avgDurations[i];
+        const y = padT + innerH - (dur / maxDur) * innerH;
+        return [x, y];
+      });
+
+      const linePath = pts => pts.map((p, i) => (i ? "L" : "M") + p[0] + " " + p[1]).join(" ");
+      const areaPath = pts => {
+        const l = linePath(pts);
+        const last = pts[pts.length - 1];
+        return `${l} L${last[0]} ${padT + innerH} L${pts[0][0]} ${padT + innerH} Z`;
+      };
+
+      // Y 轴刻度 (count) 0..maxCount, 取 4 档
+      const countTicks = [0, Math.ceil(maxCount * 0.33), Math.ceil(maxCount * 0.66), maxCount];
+      const durTicks = [0, Math.round(maxDur * 0.5), Math.round(maxDur)];
+
+      const svg = `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none">
+          ${countTicks.map(t => {
+            const y = padT + innerH - (t / maxCount) * innerH;
+            return `
+              <line class="trend-grid-line" x1="${padL}" y1="${y}" x2="${padL + innerW}" y2="${y}"></line>
+              <text class="trend-axis-text" x="${padL - 6}" y="${y + 4}" text-anchor="end">${t}</text>
+            `;
+          }).join("")}
+          ${durTicks.map(t => {
+            const y = padT + innerH - (t / maxDur) * innerH;
+            return `<text class="trend-axis-text" x="${padL + innerW + 6}" y="${y + 4}" text-anchor="start" style="fill: var(--amber)">${formatDuration(t)}</text>`;
+          }).join("")}
+          <line class="trend-axis-line" x1="${padL}" y1="${padT + innerH}" x2="${padL + innerW}" y2="${padT + innerH}"></line>
+          ${buckets.map((b, i) => {
+            const x = padL + i * xStep;
+            return `<text class="trend-axis-text" x="${x}" y="${padT + innerH + 18}" text-anchor="middle">${b.label}</text>`;
+          }).join("")}
+          <path class="trend-area" d="${areaPath(pointsCount)}"></path>
+          <path class="trend-line-count" d="${linePath(pointsCount)}"></path>
+          <path class="trend-line-duration" d="${linePath(pointsDur)}"></path>
+          ${pointsCount.map(([x, y], i) => buckets[i].count ? `<circle class="trend-dot-count" cx="${x}" cy="${y}" r="4"><title>${buckets[i].label}: ${buckets[i].count} 篇</title></circle>` : "").join("")}
+          ${pointsDur.map(([x, y], i) => avgDurations[i] ? `<circle class="trend-dot-duration" cx="${x}" cy="${y}" r="3.5"><title>${buckets[i].label}: 平均 ${formatDuration(Math.round(avgDurations[i]))}</title></circle>` : "").join("")}
+        </svg>
+        <div class="chart-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>完成数量（左轴）</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>平均耗时（右轴）</span>
+        </div>
+      `;
+      root.innerHTML = svg;
+    }
+
+    // ---------- Stage 耗时热力图 ----------
+    function renderStageHeatmap() {
+      const root = document.getElementById("stageHeatmap");
+      if (!root) return;
+      const rows = projects.map(project => ({
+        project,
+        durations: stageDurationsOfProject(project)
+      }));
+      const hasAnyData = rows.some(r => r.durations.size > 0);
+
+      if (!hasAnyData) {
+        root.innerHTML = `
+          <div class="chart-empty">
+            暂无阶段耗时数据
+            <div class="chart-empty-hint">项目开始执行后，这里会展示每个阶段的实际耗时</div>
+          </div>
+        `;
+        return;
+      }
+
+      // 全局最大耗时用于归一化色阶
+      let maxDur = 0;
+      for (const row of rows) {
+        for (const val of row.durations.values()) {
+          if (val > maxDur) maxDur = val;
+        }
+      }
+      const displayRows = rows.slice(0, 10); // 最多 10 行避免拥挤
+      const stages = [1, 2, 3, 4, 5, 6];
+      const stageNames = ["文献", "建模", "设计", "执行", "写作", "评审"];
+
+      const rowHeight = 32;
+      const cellWidth = 64;
+      const leftLabelW = 160;
+      const topLabelH = 24;
+      const bottomLegend = 36;
+      const width = leftLabelW + stages.length * cellWidth + 12;
+      const height = topLabelH + displayRows.length * rowHeight + bottomLegend;
+
+      function levelOf(sec) {
+        if (!sec) return -1;
+        const ratio = sec / maxDur;
+        if (ratio < 0.08) return 0;
+        if (ratio < 0.2) return 1;
+        if (ratio < 0.4) return 2;
+        if (ratio < 0.6) return 3;
+        if (ratio < 0.82) return 4;
+        return 5;
+      }
+
+      const svg = `
+        <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMinYMid meet">
+          ${stages.map((stage, i) => {
+            const cx = leftLabelW + i * cellWidth + cellWidth / 2;
+            return `<text class="heat-axis-text" x="${cx}" y="${topLabelH - 8}" text-anchor="middle">${stageNames[i]}</text>`;
+          }).join("")}
+          ${displayRows.map((row, ri) => {
+            const cy = topLabelH + ri * rowHeight + rowHeight / 2;
+            const title = row.project.name || row.project.topic || row.project.id;
+            const trimmed = title.length > 18 ? title.slice(0, 17) + "…" : title;
+            return `
+              <text class="heat-axis-text" x="${leftLabelW - 8}" y="${cy + 4}" text-anchor="end">${escapeHtml(trimmed)}</text>
+              ${stages.map((stage, ci) => {
+                const sec = row.durations.get(stage) || 0;
+                const level = levelOf(sec);
+                const x = leftLabelW + ci * cellWidth + 3;
+                const y = topLabelH + ri * rowHeight + 3;
+                const w = cellWidth - 6;
+                const h = rowHeight - 6;
+                const cls = level < 0 ? "empty" : `lvl-${level}`;
+                const tooltip = `${escapeHtml(title)} · Stage ${stage}${stageNames[ci]}\n${sec ? "耗时 " + formatDuration(sec) : "未开始"}`;
+                return `<rect class="heat-cell-rect ${cls}" x="${x}" y="${y}" width="${w}" height="${h}"><title>${tooltip}</title></rect>`;
+              }).join("")}
+            `;
+          }).join("")}
+          ${(() => {
+            // 图例
+            const legendY = topLabelH + displayRows.length * rowHeight + 12;
+            const legendX = leftLabelW;
+            const legendStep = 24;
+            const levels = [0, 1, 2, 3, 4, 5];
+            return `
+              <text class="heat-axis-text" x="${legendX - 8}" y="${legendY + 11}" text-anchor="end">少</text>
+              ${levels.map((l, i) => `<rect class="heat-cell-rect lvl-${l}" x="${legendX + i * legendStep}" y="${legendY}" width="20" height="16"></rect>`).join("")}
+              <text class="heat-axis-text" x="${legendX + levels.length * legendStep + 6}" y="${legendY + 11}" text-anchor="start">多</text>
+              <text class="heat-axis-text" x="${width - 4}" y="${legendY + 11}" text-anchor="end">最长 ${formatDuration(maxDur)}</text>
+            `;
+          })()}
+        </svg>
+        ${rows.length > displayRows.length ? `<div style="margin-top:8px; color: var(--muted); font-size: 11px; text-align:center">仅展示最近 ${displayRows.length} 个项目</div>` : ""}
+      `;
+      root.innerHTML = svg;
+    }
+
+    // ---------- 产物类型饼图 ----------
+    function renderArtifactPie() {
+      const root = document.getElementById("artifactPie");
+      if (!root) return;
+
+      const typeMap = new Map();
+      for (const artifact of artifacts) {
+        const type = normalizeArtifactType(artifact);
+        typeMap.set(type, (typeMap.get(type) || 0) + 1);
+      }
+      const total = artifacts.length;
+      if (!total) {
+        root.innerHTML = `
+          <div class="chart-empty">
+            暂无产物
+            <div class="chart-empty-hint">项目阶段完成后，产物文件会在这里汇总</div>
+          </div>
+        `;
+        return;
+      }
+
+      const entries = [...typeMap.entries()].sort((a, b) => b[1] - a[1]);
+      const colors = ["#2f6fed", "#138a5b", "#b7791f", "#7551b8", "#087c8f", "#c24132", "#6b7a90"];
+
+      const size = 220;
+      const r = 88;
+      const innerR = 54;
+      const cx = size / 2;
+      const cy = size / 2;
+
+      let cumulative = 0;
+      const slices = entries.map(([type, count], i) => {
+        const ratio = count / total;
+        const startAngle = cumulative * Math.PI * 2 - Math.PI / 2;
+        cumulative += ratio;
+        const endAngle = cumulative * Math.PI * 2 - Math.PI / 2;
+        const largeArc = ratio > 0.5 ? 1 : 0;
+        const x1 = cx + r * Math.cos(startAngle);
+        const y1 = cy + r * Math.sin(startAngle);
+        const x2 = cx + r * Math.cos(endAngle);
+        const y2 = cy + r * Math.sin(endAngle);
+        const xi2 = cx + innerR * Math.cos(endAngle);
+        const yi2 = cy + innerR * Math.sin(endAngle);
+        const xi1 = cx + innerR * Math.cos(startAngle);
+        const yi1 = cy + innerR * Math.sin(startAngle);
+        const color = colors[i % colors.length];
+        const pct = Math.round(ratio * 100);
+        const d = `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} L ${xi2} ${yi2} A ${innerR} ${innerR} 0 ${largeArc} 0 ${xi1} ${yi1} Z`;
+        return { type, count, pct, color, d };
+      });
+
+      const legendHtml = slices.map(s => `
+        <span class="legend-item">
+          <span class="legend-dot" style="background:${s.color}"></span>
+          ${escapeHtml(s.type)} <strong style="color:var(--text); margin-left:2px">${s.count}</strong>
+          <span style="color: #a7b0c0; margin-left:2px">(${s.pct}%)</span>
+        </span>
+      `).join("");
+
+      root.innerHTML = `
+        <div style="display:flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center;">
+          <svg viewBox="0 0 ${size} ${size}" style="width: ${size}px; height: ${size}px; max-width: 100%;">
+            ${slices.map(s => `<path class="pie-slice" d="${s.d}" fill="${s.color}"><title>${escapeHtml(s.type)}: ${s.count} (${s.pct}%)</title></path>`).join("")}
+            <text class="pie-center-number" x="${cx}" y="${cy - 2}">${total}</text>
+            <text class="pie-center-label" x="${cx}" y="${cy + 16}">总产物</text>
+          </svg>
+          <div class="chart-legend" style="flex-direction: column; align-items: flex-start; padding: 0;">
+            ${legendHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function normalizeArtifactType(artifact) {
+      const raw = (artifact.type || "").toString().toLowerCase();
+      const path = (artifact.path || "").toLowerCase();
+      if (raw === "pdf" || path.endsWith(".pdf")) return "PDF";
+      if (raw === "markdown" || path.endsWith(".md")) return "Markdown";
+      if (raw === "json" || path.endsWith(".json")) return "JSON";
+      if (raw === "log" || path.endsWith(".log")) return "日志";
+      if (raw === "image" || /\.(png|jpg|jpeg|svg|webp|gif)$/.test(path)) return "图片";
+      if (raw === "csv" || path.endsWith(".csv")) return "CSV";
+      if (raw === "txt" || path.endsWith(".txt")) return "文本";
+      if (raw === "code" || /\.(py|js|ts|ipynb|sh)$/.test(path)) return "代码";
+      if (raw) return raw;
+      return "其他";
+    }
+
+    // ---------- 主题词云 ----------
+    const STOPWORDS = new Set([
+      "的", "和", "与", "在", "及", "对", "与", "为", "从", "以", "等", "之", "及",
+      "a", "an", "the", "of", "for", "on", "in", "to", "and", "or", "with", "at", "by",
+      "is", "are", "from", "using", "based", "via", "its", "as"
+    ]);
+
+    function tokenizeTopic(text) {
+      if (!text) return [];
+      // 保留中英文字母数字，去除其他字符
+      const normalized = text.replace(/[^\u4e00-\u9fa5A-Za-z0-9\s]/g, " ");
+      const tokens = [];
+      // 英文/数字 token
+      const matches = normalized.match(/[A-Za-z][A-Za-z0-9]{2,}/g) || [];
+      for (const m of matches) {
+        const lower = m.toLowerCase();
+        if (!STOPWORDS.has(lower)) tokens.push(lower);
+      }
+      // 中文 bigram
+      const chineseRuns = normalized.match(/[\u4e00-\u9fa5]{2,}/g) || [];
+      for (const run of chineseRuns) {
+        for (let i = 0; i + 2 <= run.length; i++) {
+          const bigram = run.slice(i, i + 2);
+          if (!STOPWORDS.has(bigram)) tokens.push(bigram);
+        }
+      }
+      return tokens;
+    }
+
+    function renderThemeCloud() {
+      const root = document.getElementById("themeCloud");
+      if (!root) return;
+
+      const counts = new Map();
+      for (const project of projects) {
+        const tokens = tokenizeTopic(project.topic || project.name || "");
+        for (const token of tokens) {
+          counts.set(token, (counts.get(token) || 0) + 1);
+        }
+      }
+      const entries = [...counts.entries()]
+        .filter(([word, freq]) => word.length >= 2 && freq >= 1)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 28);
+
+      if (!entries.length) {
+        root.innerHTML = `
+          <div class="chart-empty">
+            暂无足够的主题数据
+            <div class="chart-empty-hint">创建带有研究主题的项目后，这里会展示关键词分布</div>
+          </div>
+        `;
+        return;
+      }
+
+      const maxFreq = entries[0][1];
+      const minFreq = entries[entries.length - 1][1];
+      const tones = ["tone-blue", "tone-green", "tone-violet", "tone-amber", "tone-cyan", "tone-muted"];
+
+      const chips = entries.map(([word, freq], i) => {
+        const t = maxFreq === minFreq ? 1 : (freq - minFreq) / (maxFreq - minFreq);
+        const size = Math.round(13 + t * 20); // 13 ~ 33 px
+        const tone = tones[i % tones.length];
+        return `<span class="word-chip ${tone}" style="font-size:${size}px"><span>${escapeHtml(word)}</span><span style="color:#a7b0c0; font-size:${Math.max(10, size - 8)}px; font-weight: 500; margin-left:4px">${freq}</span></span>`;
+      }).join("");
+
+      root.innerHTML = `<div class="wordcloud-wrap">${chips}</div>`;
+    }
+
+    // ---------- 主渲染 ----------
+    function renderDashboard() {
+      if (isLoading || loadError) return;
+      renderKpis();
+      renderPaperFilterBar();
+      renderPaperCards();
+      renderTrendChart();
+      renderStageHeatmap();
+      renderArtifactPie();
+      renderThemeCloud();
     }
 
     // 初始渲染加载状态
