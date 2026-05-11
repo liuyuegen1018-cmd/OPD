@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>一人科研部门</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+SC:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap">
   <style>
     :root {
       color-scheme: light;
@@ -20,6 +23,8 @@
       --cyan: #087c8f;
       --violet: #7551b8;
       --shadow: 0 8px 24px rgba(34, 45, 70, 0.08);
+      --font-serif: "Source Serif 4", "Source Serif Pro", "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "Times New Roman", "PingFang SC", "Microsoft YaHei", serif;
+      --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -2005,40 +2010,82 @@
       color: var(--muted);
     }
 
-    .paper-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 14px;
+    /* 论文卡片区域：可滚动容器 */
+    .paper-grid-wrap {
+      max-height: 620px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 4px 10px 4px 2px;
+      margin-right: -6px;
+      scrollbar-width: thin;
+      scrollbar-color: #c5cedd transparent;
     }
 
+    .paper-grid-wrap::-webkit-scrollbar { width: 8px; }
+    .paper-grid-wrap::-webkit-scrollbar-track { background: transparent; }
+    .paper-grid-wrap::-webkit-scrollbar-thumb {
+      background: #d4dbe8;
+      border-radius: 4px;
+    }
+    .paper-grid-wrap::-webkit-scrollbar-thumb:hover { background: #b6c0d4; }
+
+    .paper-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    /* 类论文预览卡片：学术字体、排版、纸张质感 */
     .paper-card {
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
       border: 1px solid var(--border);
-      background: var(--panel);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: 6px;
+      padding: 22px 22px 16px 26px;
+      min-height: 280px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 2px 6px rgba(34, 45, 70, 0.04);
-      transition: transform 120ms ease, box-shadow 120ms ease;
-      position: relative;
-      overflow: hidden;
+      gap: 8px;
+      box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.04),
+        0 4px 10px rgba(15, 23, 42, 0.035);
+      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
       cursor: pointer;
+      overflow: hidden;
+      font-family: var(--font-serif);
     }
 
     .paper-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(34, 45, 70, 0.09);
+      transform: translateY(-3px);
+      box-shadow:
+        0 6px 14px rgba(15, 23, 42, 0.08),
+        0 18px 36px rgba(15, 23, 42, 0.09);
+      border-color: #c0cadf;
     }
 
+    /* 左侧学科色条（替代顶部色条） */
     .paper-card::before {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      height: 3px;
+      bottom: 0;
+      width: 4px;
       background: var(--blue);
+    }
+
+    /* 右上角淡水印，增加"论文"质感 */
+    .paper-card::after {
+      content: "§";
+      position: absolute;
+      right: 14px;
+      top: 10px;
+      font-family: var(--font-serif);
+      font-size: 34px;
+      color: #eef2f9;
+      font-weight: 400;
+      pointer-events: none;
+      user-select: none;
     }
 
     .paper-card.paper-done::before { background: var(--green); }
@@ -2049,64 +2096,305 @@
     .paper-card.paper-queued::before { background: #9ca3af; }
     .paper-card.paper-interrupted::before { background: var(--amber); }
 
+    .paper-venue {
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .paper-venue .venue-tag {
+      color: var(--blue);
+    }
+
+    .paper-venue .venue-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #c4cbdb;
+      display: inline-block;
+    }
+
     .paper-head {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 10px;
+      gap: 12px;
     }
 
     .paper-title {
-      font-size: 15px;
-      font-weight: 750;
-      line-height: 1.38;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.3;
       color: var(--text);
+      letter-spacing: -0.005em;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
       flex: 1;
+      margin: 0;
+    }
+
+    .paper-authors {
+      font-family: var(--font-serif);
+      font-size: 12.5px;
+      color: #4c5670;
+      font-style: italic;
+      line-height: 1.45;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin-top: 2px;
+    }
+
+    .paper-section-label {
+      font-family: var(--font-sans);
+      font-size: 9.5px;
+      letter-spacing: 0.18em;
+      color: #9098ab;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 6px;
     }
 
     .paper-abstract {
-      color: var(--muted);
-      font-size: 12.5px;
-      line-height: 1.55;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      line-height: 1.62;
+      color: #323c54;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 5;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      min-height: 58px;
+      text-align: justify;
+      hyphens: auto;
+      flex: 1;
+      min-height: 90px;
     }
 
-    .paper-abstract.is-loading {
-      color: #b4bac7;
-      font-style: italic;
-    }
-
+    .paper-abstract.is-loading,
     .paper-abstract.is-empty {
-      color: #b4bac7;
+      font-style: italic;
+      color: #a6adbe;
     }
 
-    .paper-meta-row {
+    .paper-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 4px;
+      font-family: var(--font-sans);
+    }
+
+    .paper-keyword {
+      font-size: 10.5px;
+      padding: 2px 8px;
+      background: #eef2f9;
+      color: #47536d;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .paper-footer {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
+      align-items: center;
+      gap: 8px;
       padding-top: 10px;
-      border-top: 1px dashed var(--border);
+      margin-top: auto;
+      border-top: 1px solid #edf0f6;
+      font-family: var(--font-sans);
+      font-size: 11px;
       color: var(--muted);
-      font-size: 11.5px;
     }
 
-    .paper-meta-item {
+    .paper-footer-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .paper-footer-meta strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .paper-open-hint {
+      color: var(--blue);
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
+      transition: transform 140ms ease, opacity 140ms ease;
+      opacity: 0.8;
     }
 
-    .paper-meta-item strong {
+    .paper-card:hover .paper-open-hint {
+      transform: translateX(2px);
+      opacity: 1;
+    }
+
+    /* ---- 论文详情弹窗 ---- */
+    .paper-detail-card {
+      width: min(840px, 100%);
+      max-height: calc(100vh - 60px);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      background: #fdfdfd;
+    }
+
+    .paper-detail-header {
+      padding: 18px 28px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      background: linear-gradient(180deg, #f7f9fc 0%, #fdfdfd 100%);
+    }
+
+    .paper-detail-venue {
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .paper-detail-venue .venue-tag { color: var(--blue); font-weight: 800; }
+    .paper-detail-venue .venue-dot {
+      width: 3px; height: 3px; border-radius: 50%;
+      background: #c4cbdb; display: inline-block;
+    }
+
+    .paper-detail-body {
+      padding: 22px 32px 12px;
+      overflow: auto;
+      font-family: var(--font-serif);
       color: var(--text);
-      font-weight: 680;
+    }
+
+    .paper-detail-body::-webkit-scrollbar { width: 8px; }
+    .paper-detail-body::-webkit-scrollbar-thumb { background: #d4dbe8; border-radius: 4px; }
+
+    .paper-detail-title {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      line-height: 1.28;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .paper-detail-authors {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: #4c5670;
+      font-size: 14px;
+      margin: 4px 0 2px;
+      line-height: 1.55;
+    }
+
+    .paper-detail-affil {
+      font-family: var(--font-serif);
+      font-size: 12.5px;
+      color: #6c7590;
+      margin: 0 0 6px;
+    }
+
+    .paper-detail-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px 14px;
+      padding: 14px 16px;
+      background: #f7f9fc;
+      border: 1px solid #eceff6;
+      border-radius: 6px;
+      font-family: var(--font-sans);
+      margin: 16px 0 20px;
+    }
+
+    .paper-detail-meta-item .meta-k {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .paper-detail-meta-item .meta-v {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .paper-detail-section-title {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8a93a7;
+      font-weight: 700;
+      margin: 18px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #eceff6;
+    }
+
+    .paper-detail-abstract {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 1.78;
+      text-align: justify;
+      hyphens: auto;
+      color: #1d2537;
+      white-space: pre-wrap;
+    }
+
+    .paper-detail-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0 4px;
+      font-family: var(--font-sans);
+    }
+
+    .paper-detail-keywords .paper-keyword {
+      font-size: 11.5px;
+      padding: 3px 10px;
+    }
+
+    .paper-detail-empty {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: #a6adbe;
+      font-size: 14px;
+      padding: 14px 0;
+    }
+
+    .paper-detail-actions {
+      padding: 14px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #fbfcfe;
     }
 
     /* 图表通用 */
@@ -2500,7 +2788,9 @@
               <div class="paper-filter-bar" id="paperFilterBar"></div>
             </div>
             <div class="panel-body">
-              <div class="paper-grid" id="paperGrid"></div>
+              <div class="paper-grid-wrap" id="paperGridWrap">
+                <div class="paper-grid" id="paperGrid"></div>
+              </div>
             </div>
           </div>
 
@@ -2664,6 +2954,21 @@
           <button class="btn" id="cancelEmployeeBtn" type="button">取消</button>
           <button class="btn primary" id="createEmployeeBtn" type="button">新增员工</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 论文详情弹窗 -->
+  <div class="modal-backdrop" id="paperDetailModal" aria-hidden="true">
+    <div class="modal-card paper-detail-card" role="dialog" aria-modal="true" aria-labelledby="paperDetailTitle">
+      <div class="paper-detail-header">
+        <div class="paper-detail-venue" id="paperDetailVenue"></div>
+        <button class="drawer-close" id="paperDetailClose" aria-label="关闭论文详情" style="font-size: 18px;">×</button>
+      </div>
+      <div class="paper-detail-body" id="paperDetailBody"></div>
+      <div class="paper-detail-actions">
+        <button class="btn" id="paperDetailCloseBtn" type="button">关闭</button>
+        <button class="btn primary" id="paperDetailGotoBtn" type="button">进入项目管理 →</button>
       </div>
     </div>
   </div>
@@ -4121,6 +4426,17 @@
       radio.addEventListener("change", updateScheduleVisibility);
     });
 
+    // 论文详情弹窗事件绑定
+    document.getElementById("paperDetailModal")?.addEventListener("click", event => {
+      if (event.target.id === "paperDetailModal") closePaperDetail();
+    });
+    document.getElementById("paperDetailClose")?.addEventListener("click", closePaperDetail);
+    document.getElementById("paperDetailCloseBtn")?.addEventListener("click", closePaperDetail);
+    document.getElementById("paperDetailGotoBtn")?.addEventListener("click", gotoProjectFromPaper);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && openedPaperDetailId) closePaperDetail();
+    });
+
     function setEmployeeModalError(message = "") {
       document.getElementById("employeeModalError").textContent = message;
     }
@@ -4377,7 +4693,8 @@
 
     // ============ 数字看板 ============
     let dashboardPaperFilter = "all";
-    const abstractCache = new Map(); // key: runId → { text, status: 'loading'|'done'|'empty' }
+    let openedPaperDetailId = null;
+    const abstractCache = new Map(); // key: runId → { text, fullText, status: 'loading'|'done'|'empty', sourcePath }
 
     const DASHBOARD_STATUS_LABELS = {
       all: "全部",
@@ -4552,7 +4869,7 @@
     // ---------- 论文卡片 ----------
     function fetchAbstract(runId) {
       if (abstractCache.has(runId)) return;
-      abstractCache.set(runId, { text: "", status: "loading" });
+      abstractCache.set(runId, { text: "", fullText: "", status: "loading" });
       const paperArtifact = artifacts.find(a =>
         a.project === runId &&
         (a.path.includes("paper") || a.path.includes("review") || a.path.includes("literature")) &&
@@ -4560,7 +4877,7 @@
       ) || artifacts.find(a => a.project === runId && /\.(md|txt)$/i.test(a.path));
 
       if (!paperArtifact) {
-        abstractCache.set(runId, { text: "", status: "empty" });
+        abstractCache.set(runId, { text: "", fullText: "", status: "empty" });
         renderPaperCards();
         return;
       }
@@ -4569,14 +4886,19 @@
         .then(payload => {
           const raw = payload?.content || payload?.text || "";
           const firstPara = extractFirstParagraph(raw);
+          const fullAbstract = extractFullAbstract(raw);
           abstractCache.set(runId, {
             text: firstPara,
-            status: firstPara ? "done" : "empty"
+            fullText: fullAbstract || firstPara,
+            status: firstPara ? "done" : "empty",
+            sourcePath: paperArtifact.path
           });
           renderPaperCards();
+          // 如果详情弹窗当前正打开该项目，同步刷新
+          if (openedPaperDetailId === runId) renderPaperDetail(runId);
         })
         .catch(() => {
-          abstractCache.set(runId, { text: "", status: "empty" });
+          abstractCache.set(runId, { text: "", fullText: "", status: "empty" });
           renderPaperCards();
         });
     }
@@ -4607,6 +4929,65 @@
       return joined.length > 240 ? joined.slice(0, 240) + "…" : joined;
     }
 
+    // 提取更完整的摘要（用于详情弹窗），优先查找 "Abstract" 节
+    function extractFullAbstract(raw) {
+      if (!raw) return "";
+      const lines = raw.split(/\r?\n/);
+      // 优先匹配 "# Abstract" 或 "## 摘要" 等标题
+      const absHeadingRe = /^#{1,3}\s*(abstract|摘要|abstract\s*[:：])\s*$/i;
+      const anyHeadingRe = /^#{1,3}\s+/;
+      const paragraphs = [];
+      let inAbs = false;
+      let currentPara = [];
+      const flush = () => {
+        if (currentPara.length) {
+          paragraphs.push(currentPara.join(" ").replace(/\s+/g, " ").trim());
+          currentPara = [];
+        }
+      };
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (absHeadingRe.test(line)) {
+          inAbs = true;
+          flush();
+          continue;
+        }
+        if (inAbs) {
+          if (anyHeadingRe.test(line)) break;
+          if (line.startsWith("```")) continue;
+          if (line === "") { flush(); continue; }
+          currentPara.push(line);
+        }
+      }
+      flush();
+      if (paragraphs.length) {
+        const joined = paragraphs.join("\n\n");
+        return joined.length > 1400 ? joined.slice(0, 1400) + "…" : joined;
+      }
+      // 否则：读取 frontmatter 后的前 2-3 段
+      let started = false;
+      const buf = [];
+      let paraLines = [];
+      const pushPara = () => {
+        if (paraLines.length) {
+          buf.push(paraLines.join(" ").replace(/\s+/g, " ").trim());
+          paraLines = [];
+        }
+      };
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+        if (!started && (line === "" || line.startsWith("---") || line.startsWith("```"))) continue;
+        if (line.startsWith("#")) { if (started) pushPara(); continue; }
+        if (line === "") { if (started) { pushPara(); if (buf.length >= 3) break; } continue; }
+        started = true;
+        paraLines.push(line);
+      }
+      pushPara();
+      if (!buf.length) return "";
+      const joined = buf.slice(0, 3).join("\n\n");
+      return joined.length > 1400 ? joined.slice(0, 1400) + "…" : joined;
+    }
+
     function renderPaperFilterBar() {
       const root = document.getElementById("paperFilterBar");
       const groups = { all: projects.length };
@@ -4632,12 +5013,78 @@
       });
     }
 
+    // ---- 论文卡片辅助函数：作者 / 关键词 / Venue ----
+    function buildPaperAuthors(project) {
+      const ids = new Set();
+      const assignments = projectEmployeeAssignments[project.id];
+      if (assignments) Object.values(assignments).forEach(v => v && ids.add(v));
+      for (const event of project.timeline || []) {
+        if (event.employee_id) ids.add(event.employee_id);
+      }
+      if (project.activeEmployee) ids.add(project.activeEmployee);
+      const names = [];
+      for (const id of ids) {
+        const emp = employees.find(e => e.id === id);
+        if (emp) names.push(emp.cn || emp.name);
+      }
+      // 若没有，回退到 activeEmployeeCn（形如 "文献研究员 · Literature"）
+      if (!names.length) {
+        const cn = (project.activeEmployeeCn || "").split("·")[0].trim();
+        if (cn) names.push(cn);
+      }
+      return names;
+    }
+
+    function formatAuthorsLine(names) {
+      if (!names.length) return "一人科研部门 · 自动研究团队";
+      if (names.length <= 3) return names.join("、");
+      return `${names.slice(0, 3).join("、")} 等 ${names.length} 位研究员`;
+    }
+
+    function buildPaperKeywords(project, max = 4) {
+      const raw = `${project.topic || ""} ${project.name || ""}`;
+      if (!raw.trim()) return [];
+      // 去除常见修饰词
+      const stop = new Set([
+        "研究", "分析", "探索", "方法", "基于", "关于", "系统", "模型", "实验",
+        "a", "an", "the", "of", "on", "in", "for", "with", "and", "to", "by"
+      ]);
+      // 提取英文单词
+      const englishTokens = raw.match(/[A-Za-z][A-Za-z0-9\-]{2,}/g) || [];
+      // 提取中文二字/四字词（粗粒度）
+      const chineseSegments = (raw.match(/[\u4e00-\u9fa5]{2,6}/g) || []);
+      const out = [];
+      const seen = new Set();
+      const push = token => {
+        const key = token.toLowerCase();
+        if (seen.has(key) || stop.has(key)) return;
+        seen.add(key);
+        out.push(token);
+      };
+      englishTokens.forEach(push);
+      chineseSegments.forEach(seg => {
+        // 对较长段落切两字关键词
+        if (seg.length <= 4) { push(seg); return; }
+        for (let i = 0; i + 2 <= seg.length && out.length < max * 2; i += 2) {
+          push(seg.slice(i, Math.min(i + 2, seg.length)));
+        }
+      });
+      return out.slice(0, max);
+    }
+
+    function paperVenueLabel(project) {
+      const stageNum = Number(project.stage || 1);
+      const stageName = ["", "文献综述", "理论建模", "实验设计", "实验执行", "论文写作", "学术评审"][stageNum] || "";
+      const year = new Date().getFullYear();
+      return { venue: "Research-OPD · 技术报告", stage: stageName ? `Stage ${stageNum} · ${stageName}` : `Stage ${stageNum}`, year: String(year) };
+    }
+
     function renderPaperCards() {
       const root = document.getElementById("paperGrid");
       if (!root) return;
       if (!projects.length) {
         root.innerHTML = `
-          <div style="grid-column: 1 / -1; padding: 32px 16px; text-align: center; color: var(--muted);">
+          <div style="grid-column: 1 / -1; padding: 32px 16px; text-align: center; color: var(--muted); font-family: var(--font-serif); font-style: italic;">
             暂无科研项目，创建第一个项目后，这里会展示论文档案。
           </div>
         `;
@@ -4650,7 +5097,7 @@
       );
       if (!filtered.length) {
         root.innerHTML = `
-          <div style="grid-column: 1 / -1; padding: 32px 16px; text-align: center; color: var(--muted);">
+          <div style="grid-column: 1 / -1; padding: 32px 16px; text-align: center; color: var(--muted); font-family: var(--font-serif); font-style: italic;">
             该状态下暂无项目。
           </div>
         `;
@@ -4662,53 +5109,202 @@
         const cache = abstractCache.get(project.id);
         let abstractHtml;
         if (!cache) {
-          abstractHtml = `<div class="paper-abstract is-loading">正在提取摘要…</div>`;
-          // 异步触发
+          abstractHtml = `<p class="paper-abstract is-loading">正在提取论文摘要…</p>`;
           setTimeout(() => fetchAbstract(project.id), 0);
         } else if (cache.status === "loading") {
-          abstractHtml = `<div class="paper-abstract is-loading">正在提取摘要…</div>`;
+          abstractHtml = `<p class="paper-abstract is-loading">正在提取论文摘要…</p>`;
         } else if (cache.status === "done" && cache.text) {
-          abstractHtml = `<div class="paper-abstract">${escapeHtml(cache.text)}</div>`;
+          abstractHtml = `<p class="paper-abstract">${escapeHtml(cache.text)}</p>`;
         } else {
           const placeholder = project.topic
-            ? `基于"${escapeHtml(project.topic).slice(0, 80)}"的研究项目，当前暂无可读的产物摘要。`
-            : "当前项目尚未产出可读的文档摘要。";
-          abstractHtml = `<div class="paper-abstract is-empty">${placeholder}</div>`;
+            ? `本论文围绕「${escapeHtml(project.topic).slice(0, 60)}」展开研究，相关手稿尚在撰写中，稍候自动回填摘要。`
+            : "本项目尚未产出可读的论文草稿。";
+          abstractHtml = `<p class="paper-abstract is-empty">${placeholder}</p>`;
         }
 
+        const authors = buildPaperAuthors(project);
+        const authorsLine = formatAuthorsLine(authors);
+        const keywords = buildPaperKeywords(project);
+        const { venue, stage, year } = paperVenueLabel(project);
         const empCount = countParticipatingEmployees(project);
+        const artifactCount = artifacts.filter(a => a.project === project.id).length;
         const lastTimestamp = (project.timeline || [])
           .map(event => new Date(event.timestamp).getTime())
           .filter(value => !Number.isNaN(value));
         const lastUpdated = lastTimestamp.length ? Math.max(...lastTimestamp) : 0;
 
+        const keywordsHtml = keywords.length
+          ? `<div class="paper-keywords">${keywords.map(k => `<span class="paper-keyword">${escapeHtml(k)}</span>`).join("")}</div>`
+          : "";
+
         return `
-          <article class="paper-card paper-${statusGroup}" data-run="${project.id}">
-            <div class="paper-head">
-              <div class="paper-title">${escapeHtml(project.name || project.topic || project.id)}</div>
-              <span class="status-pill ${statusClass(project.status)}">${project.statusText}</span>
+          <article class="paper-card paper-${statusGroup}" data-run="${project.id}" role="button" tabindex="0" aria-label="查看论文详情：${escapeHtml(project.name || project.topic || project.id)}">
+            <div class="paper-venue">
+              <span class="venue-tag">${escapeHtml(venue)}</span>
+              <span class="venue-dot"></span>
+              <span>${escapeHtml(stage)}</span>
+              <span class="venue-dot"></span>
+              <span>${escapeHtml(year)}</span>
             </div>
+            <div class="paper-head">
+              <h3 class="paper-title">${escapeHtml(project.name || project.topic || project.id)}</h3>
+            </div>
+            <div class="paper-authors">${escapeHtml(authorsLine)}</div>
+            <div class="paper-section-label">Abstract</div>
             ${abstractHtml}
-            <div class="paper-meta-row">
-              <span class="paper-meta-item"><strong>${empCount}</strong> 名员工</span>
-              <span class="paper-meta-item">${lastUpdated ? formatRelativeDate(new Date(lastUpdated)) : "未更新"}</span>
+            ${keywordsHtml}
+            <div class="paper-footer">
+              <div class="paper-footer-meta">
+                <span><strong>${empCount}</strong> 作者</span>
+                <span><strong>${artifactCount}</strong> 产物</span>
+                <span>${lastUpdated ? formatRelativeDate(new Date(lastUpdated)) : "未更新"}</span>
+              </div>
+              <span class="paper-open-hint">查看详情 →</span>
             </div>
           </article>
         `;
       }).join("");
 
       root.querySelectorAll(".paper-card").forEach(card => {
-        card.addEventListener("click", () => {
-          selectedProjectId = card.dataset.run;
-          document.querySelectorAll(".nav button").forEach(btn => btn.classList.remove("active"));
-          document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-          const targetBtn = document.querySelector('.nav button[data-view="burndown"]');
-          if (targetBtn) targetBtn.classList.add("active");
-          document.getElementById("burndown").classList.add("active");
-          updatePageHeader("burndown");
-          renderAll();
+        const handler = () => openPaperDetail(card.dataset.run);
+        card.addEventListener("click", handler);
+        card.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handler(); }
         });
       });
+    }
+
+    // ---------- 论文详情弹窗 ----------
+    function openPaperDetail(runId) {
+      openedPaperDetailId = runId;
+      // 若还没取摘要，触发一下以便自动填充详情
+      if (!abstractCache.has(runId)) fetchAbstract(runId);
+      renderPaperDetail(runId);
+      const modal = document.getElementById("paperDetailModal");
+      if (modal) {
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+      }
+    }
+
+    function closePaperDetail() {
+      openedPaperDetailId = null;
+      const modal = document.getElementById("paperDetailModal");
+      if (modal) {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+      }
+    }
+
+    function gotoProjectFromPaper() {
+      const runId = openedPaperDetailId;
+      closePaperDetail();
+      if (!runId) return;
+      selectedProjectId = runId;
+      document.querySelectorAll(".nav button").forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      const targetBtn = document.querySelector('.nav button[data-view="burndown"]');
+      if (targetBtn) targetBtn.classList.add("active");
+      document.getElementById("burndown").classList.add("active");
+      updatePageHeader("burndown");
+      renderAll();
+    }
+
+    function renderPaperDetail(runId) {
+      const project = projects.find(p => p.id === runId);
+      if (!project) return;
+      const cache = abstractCache.get(runId);
+      const { venue, stage, year } = paperVenueLabel(project);
+      const authors = buildPaperAuthors(project);
+      const authorsLine = formatAuthorsLine(authors);
+      const keywords = buildPaperKeywords(project, 8);
+      const empCount = countParticipatingEmployees(project);
+      const artifactCount = artifacts.filter(a => a.project === project.id).length;
+      const duration = totalRunDurationSeconds(project);
+      const lastTimestamp = (project.timeline || [])
+        .map(event => new Date(event.timestamp).getTime())
+        .filter(value => !Number.isNaN(value));
+      const lastUpdated = lastTimestamp.length ? Math.max(...lastTimestamp) : 0;
+      const progress = Math.round(project.progress || 0);
+
+      // 摘要
+      let abstractSection;
+      if (!cache || cache.status === "loading") {
+        abstractSection = `<div class="paper-detail-empty">正在加载论文全文摘要…</div>`;
+      } else if (cache.status === "done" && (cache.fullText || cache.text)) {
+        abstractSection = `<div class="paper-detail-abstract">${escapeHtml(cache.fullText || cache.text)}</div>`;
+      } else {
+        const placeholder = project.topic
+          ? `本论文围绕「${escapeHtml(project.topic)}」展开研究。当前项目尚在推进，论文产物稍后自动同步到看板。`
+          : "本项目尚未产出可读的论文草稿。";
+        abstractSection = `<div class="paper-detail-empty">${placeholder}</div>`;
+      }
+
+      const venueHtml = `
+        <span class="venue-tag">${escapeHtml(venue)}</span>
+        <span class="venue-dot"></span>
+        <span>${escapeHtml(stage)}</span>
+        <span class="venue-dot"></span>
+        <span>${escapeHtml(year)}</span>
+        <span class="venue-dot"></span>
+        <span class="status-pill ${statusClass(project.status)}" style="font-family: var(--font-sans); font-size: 10.5px;">${escapeHtml(project.statusText)}</span>
+      `;
+
+      const bodyHtml = `
+        <h2 class="paper-detail-title" id="paperDetailTitle">${escapeHtml(project.name || project.topic || project.id)}</h2>
+        <div class="paper-detail-authors">${escapeHtml(authorsLine)}</div>
+        <div class="paper-detail-affil">一人科研部门 Research-OPD · 自动化科研流水线</div>
+
+        <div class="paper-detail-meta-grid">
+          <div class="paper-detail-meta-item">
+            <div class="meta-k">当前阶段</div>
+            <div class="meta-v">${escapeHtml(stage)}</div>
+          </div>
+          <div class="paper-detail-meta-item">
+            <div class="meta-k">进度</div>
+            <div class="meta-v">${progress}%</div>
+          </div>
+          <div class="paper-detail-meta-item">
+            <div class="meta-k">累计产物</div>
+            <div class="meta-v">${artifactCount}</div>
+          </div>
+          <div class="paper-detail-meta-item">
+            <div class="meta-k">参与员工</div>
+            <div class="meta-v">${empCount}</div>
+          </div>
+          <div class="paper-detail-meta-item">
+            <div class="meta-k">运行时长</div>
+            <div class="meta-v">${duration ? formatDuration(duration) : "—"}</div>
+          </div>
+          <div class="paper-detail-meta-item">
+            <div class="meta-k">最近更新</div>
+            <div class="meta-v">${lastUpdated ? formatRelativeDate(new Date(lastUpdated)) : "未更新"}</div>
+          </div>
+        </div>
+
+        <div class="paper-detail-section-title">Abstract · 摘要</div>
+        ${abstractSection}
+
+        ${keywords.length ? `
+          <div class="paper-detail-section-title">Keywords · 关键词</div>
+          <div class="paper-detail-keywords">${keywords.map(k => `<span class="paper-keyword">${escapeHtml(k)}</span>`).join("")}</div>
+        ` : ""}
+
+        ${project.topic ? `
+          <div class="paper-detail-section-title">Research Topic · 研究主题</div>
+          <div class="paper-detail-abstract" style="font-size: 14px;">${escapeHtml(project.topic)}</div>
+        ` : ""}
+
+        ${cache?.sourcePath ? `
+          <div class="paper-detail-section-title">Source · 产物出处</div>
+          <div class="paper-detail-abstract" style="font-size: 12.5px; color: var(--muted); font-family: var(--font-sans);">
+            ${escapeHtml(cache.sourcePath)}
+          </div>
+        ` : ""}
+      `;
+
+      document.getElementById("paperDetailVenue").innerHTML = venueHtml;
+      document.getElementById("paperDetailBody").innerHTML = bodyHtml;
     }
 
     function escapeHtml(text) {
