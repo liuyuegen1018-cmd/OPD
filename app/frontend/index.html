@@ -2081,12 +2081,12 @@
     }
     .paper-grid-wrap::-webkit-scrollbar-thumb:hover { background: #b9ad89; background-clip: padding-box; }
 
-    /* 单列纵向书架列表 —— 最大 820px，模拟 A4 印张 */
+    /* 单列纵向书架列表 —— 宽度拉满，提高利用率 */
     .paper-grid {
       display: flex;
       flex-direction: column;
-      gap: 26px;
-      max-width: 820px;
+      gap: 22px;
+      max-width: 100%;
       margin: 0 auto;
     }
 
@@ -2095,15 +2095,15 @@
       position: relative;
       background: linear-gradient(180deg, #ffffff 0%, #fdfbf3 100%);
       border: 1px solid #e4ddca;
-      border-radius: 4px;
-      padding: 44px 64px 30px;
+      border-radius: 6px;
+      padding: 20px 28px 18px;
       display: flex;
       flex-direction: column;
       gap: 0;
       box-shadow:
         0 1px 0 rgba(60, 48, 30, 0.04),
         0 2px 4px rgba(60, 48, 30, 0.05),
-        0 18px 32px -20px rgba(60, 48, 30, 0.18);
+        0 8px 16px -8px rgba(60, 48, 30, 0.12);
       transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
       cursor: pointer;
       overflow: hidden;
@@ -2151,8 +2151,8 @@
       text-transform: uppercase;
       color: #8a7f5c;
       font-weight: 700;
-      padding-bottom: 14px;
-      margin-bottom: 28px;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
       position: relative;
     }
 
@@ -2180,12 +2180,12 @@
 
     .paper-runhead .runhead-status {
       font-family: var(--font-sans);
-      font-size: 9.5px;
-      letter-spacing: 0.2em;
-      padding: 3px 12px;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      padding: 4px 14px;
       border-radius: 999px;
       border: 1px solid currentColor;
-      background: rgba(255, 255, 255, 0.55);
+      background: rgba(255, 255, 255, 0.8);
       font-weight: 700;
     }
 
@@ -2198,36 +2198,36 @@
     .paper-card.paper-queued .runhead-status { color: #8a93a7; }
     .paper-card.paper-active .runhead-status { color: var(--blue); }
 
-    /* 标题：居中，大号衬线，用一根细线垫底 */
+    /* 标题：左对齐，大号衬线，卡片预览 */
     .paper-title {
       font-family: var(--font-serif);
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
-      line-height: 1.26;
+      line-height: 1.32;
       color: #0f1221;
       letter-spacing: -0.012em;
-      text-align: center;
-      margin: 0 auto 10px;
-      padding: 0 8px;
-      max-width: 42em;
+      text-align: left;
+      margin: 0 0 8px;
+      padding: 0;
+      max-width: 100%;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
     .paper-authors {
       font-family: var(--font-serif);
-      font-size: 14px;
+      font-size: 13px;
       color: #3d405c;
       font-style: italic;
       line-height: 1.6;
-      text-align: center;
-      margin: 0 auto 4px;
-      padding: 0 12px;
-      max-width: 40em;
+      text-align: left;
+      margin: 0 0 4px;
+      padding: 0;
+      max-width: 100%;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -2243,26 +2243,33 @@
       font-size: 12px;
       color: #6c6444;
       font-style: italic;
-      text-align: center;
+      text-align: left;
       margin: 2px 0 0;
       letter-spacing: 0.01em;
+      display: none;
     }
 
-    /* 标题区与摘要之间：一根装饰小花/双线 */
+    /* 标题区与摘要之间：装饰（卡片模式隐藏） */
     .paper-ornament {
       text-align: center;
       color: #b8ad8c;
       font-family: var(--font-serif);
       font-size: 16px;
       letter-spacing: 1em;
-      margin: 20px 0 18px;
+      margin: 0;
       user-select: none;
       line-height: 1;
+      display: none;
     }
 
-    /* 摘要：双栏 justified，像真实期刊一样 */
+    /* 卡片中的 meta 信息行（隐藏，精简卡片） */
+    .paper-meta {
+      display: none;
+    }
+
+    /* 摘要：单栏横排，正常文档排版 */
     .paper-abstract-wrap {
-      margin: 0;
+      margin: 8px 0 0;
     }
 
     .paper-section-label {
@@ -2272,73 +2279,64 @@
       color: #7c7149;
       text-transform: uppercase;
       font-weight: 700;
-      text-align: center;
-      margin: 0 auto 10px;
+      text-align: left;
+      margin: 0 0 6px;
       position: relative;
-      padding: 0 14px;
-      display: inline-block;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, #ffffff 0%, #fdfbf3 100%);
+      padding: 0;
+      display: block;
+      background: transparent;
     }
 
     .paper-abstract-label-wrap {
-      text-align: center;
-      margin-bottom: 10px;
-      border-top: 1px solid #e4ddca;
+      text-align: left;
+      margin-bottom: 6px;
+      border-top: none;
       position: relative;
-      height: 0;
+      height: auto;
     }
 
     .paper-abstract {
       font-family: var(--font-serif);
       font-size: 13.5px;
-      line-height: 1.78;
+      line-height: 1.72;
       color: #1e2232;
-      text-align: justify;
+      text-align: left;
       hyphens: auto;
       margin: 0;
-      column-count: 2;
-      column-gap: 32px;
-      column-rule: 1px solid #ece4cc;
-      max-height: 11.4em;
+      column-count: 1;
+      max-height: 4.8em;
       overflow: hidden;
-      text-indent: 1.6em;
+      text-indent: 0;
+      word-break: break-word;
+      white-space: normal;
     }
 
     .paper-abstract.is-loading,
     .paper-abstract.is-empty {
       column-count: 1;
-      column-rule: none;
       text-indent: 0;
-      text-align: center;
+      text-align: left;
       font-style: italic;
       color: #a49b7c;
       max-height: none;
     }
 
-    /* 页脚：Keywords 左，meta 右，模仿"在线预印本"信息栏 */
+    /* 页脚：Keywords 左，提示右 */
     .paper-footer {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
       gap: 18px;
-      padding-top: 16px;
-      margin-top: 22px;
-      border-top: 1px solid #e4ddca;
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid #ece4cc;
       position: relative;
       font-family: var(--font-sans);
       font-size: 11px;
       color: #7c7149;
     }
     .paper-footer::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: -4px;
-      height: 1px;
-      background: #e4ddca;
+      display: none;
     }
 
     .paper-keywords {
@@ -2512,7 +2510,7 @@
     }
 
     .paper-detail-body {
-      padding: 36px 56px 20px;
+      padding: 28px 36px 20px;
       overflow: auto;
       font-family: var(--font-serif);
       color: var(--text);
@@ -2647,20 +2645,110 @@
       font-family: var(--font-serif);
       font-size: 15px;
       line-height: 1.82;
-      text-align: justify;
+      text-align: left;
       hyphens: auto;
       color: #1d2537;
-      white-space: pre-wrap;
-      column-count: 2;
-      column-gap: 32px;
-      column-rule: 1px solid #ece4cc;
-      text-indent: 1.6em;
+      white-space: normal;
+      word-break: break-word;
+      column-count: 1;
+      text-indent: 0;
     }
 
     .paper-detail-abstract.single-col {
       column-count: 1;
-      column-rule: none;
       text-indent: 0;
+    }
+
+    /* Markdown 渲染样式 */
+    .paper-detail-abstract h1,
+    .paper-detail-abstract h2,
+    .paper-detail-abstract h3,
+    .paper-detail-abstract h4 {
+      font-family: var(--font-serif);
+      color: #141726;
+      margin: 1.2em 0 0.5em;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    .paper-detail-abstract h1 { font-size: 1.4em; }
+    .paper-detail-abstract h2 { font-size: 1.2em; }
+    .paper-detail-abstract h3 { font-size: 1.05em; }
+    .paper-detail-abstract h4 { font-size: 1em; color: #3d405c; }
+
+    .paper-detail-abstract p {
+      margin: 0.6em 0;
+      line-height: 1.82;
+    }
+
+    .paper-detail-abstract ul,
+    .paper-detail-abstract ol {
+      padding-left: 1.8em;
+      margin: 0.5em 0;
+    }
+
+    .paper-detail-abstract li {
+      margin: 0.3em 0;
+      line-height: 1.7;
+    }
+
+    .paper-detail-abstract code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.88em;
+      background: #f5f0e4;
+      padding: 2px 5px;
+      border-radius: 3px;
+      color: #5d5436;
+    }
+
+    .paper-detail-abstract pre {
+      background: #faf6eb;
+      border: 1px solid #e4ddca;
+      border-radius: 4px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      margin: 0.8em 0;
+    }
+
+    .paper-detail-abstract pre code {
+      background: none;
+      padding: 0;
+      font-size: 0.85em;
+    }
+
+    .paper-detail-abstract blockquote {
+      border-left: 3px solid #d5cbac;
+      padding-left: 14px;
+      color: #5d5436;
+      margin: 0.8em 0;
+      font-style: italic;
+    }
+
+    .paper-detail-abstract strong {
+      font-weight: 700;
+      color: #0f1221;
+    }
+
+    .paper-detail-abstract em {
+      font-style: italic;
+    }
+
+    .paper-detail-abstract table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 0.8em 0;
+      font-size: 0.9em;
+    }
+
+    .paper-detail-abstract th,
+    .paper-detail-abstract td {
+      border: 1px solid #e4ddca;
+      padding: 6px 10px;
+      text-align: left;
+    }
+
+    .paper-detail-abstract th {
+      background: #faf6eb;
+      font-weight: 700;
     }
 
     .paper-detail-keywords {
@@ -2724,7 +2812,7 @@
     @media (max-width: 760px) {
       .paper-detail-body { padding: 24px 22px 12px; }
       .paper-detail-title { font-size: 24px; }
-      .paper-detail-abstract { column-count: 1; column-rule: none; }
+      .paper-detail-abstract { column-count: 1; }
       .paper-detail-meta-item { border-right: none; border-bottom: 1px solid #ece4cc; }
       .paper-detail-meta-item:last-child { border-bottom: none; }
     }
@@ -5674,43 +5762,16 @@
         return `
           <article class="paper-card paper-${statusGroup}" data-run="${project.id}" role="button" tabindex="0" aria-label="查看论文详情：${escapeHtml(project.name || project.topic || project.id)}">
             <div class="paper-runhead">
-              <span class="runhead-venue">${escapeHtml(runhead.left)}</span>
-              <span class="runhead-page">
-                <span class="runhead-status">${escapeHtml(statusLabel)}</span>
-                <span>${escapeHtml(runhead.article)} · ${escapeHtml(runhead.page)}</span>
-              </span>
+              <span class="runhead-venue">${escapeHtml(stage)} · ${progress}%</span>
+              <span class="runhead-status">${escapeHtml(project.statusText || statusLabel)}</span>
             </div>
             <h3 class="paper-title">${escapeHtml(project.name || project.topic || project.id)}</h3>
-            <div class="paper-authors">${authorsHtml || "一人科研部门 · 自动研究团队"}</div>
             <div class="paper-abstract-wrap">
-              <div class="paper-section-label">Abstract</div>
               ${abstractHtml}
-            </div>
-            <div class="paper-meta">
-              <div class="paper-meta-row">
-                <span>Stage</span>
-                <span class="meta-val">${escapeHtml(stage)}</span>
-              </div>
-              <div class="paper-meta-row">
-                <span>Progress</span>
-                <span class="meta-val">${progress}%</span>
-              </div>
-              <div class="paper-meta-row">
-                <span>Authors</span>
-                <span class="meta-val">${empCount}</span>
-              </div>
-              <div class="paper-meta-row">
-                <span>Artifacts</span>
-                <span class="meta-val">${artifactCount}</span>
-              </div>
-              <div class="paper-meta-row">
-                <span>Revised</span>
-                <span class="meta-val" style="font-size: 12px; font-weight: 600;">${lastUpdated ? escapeHtml(formatRelativeDate(new Date(lastUpdated))) : "—"}</span>
-              </div>
             </div>
             <div class="paper-footer">
               ${keywordsHtml}
-              <span class="paper-open-hint">Read Full Text →</span>
+              <span class="paper-open-hint">查看全文 →</span>
             </div>
           </article>
         `;
@@ -5789,7 +5850,7 @@
       } else if (cache.status === "done" && (cache.fullText || cache.text)) {
         const body = cache.fullText || cache.text;
         abstractIsShort = String(body).length < 240;
-        abstractSection = `<div class="paper-detail-abstract${abstractIsShort ? " single-col" : ""}">${escapeHtml(body)}</div>`;
+        abstractSection = `<div class="paper-detail-abstract${abstractIsShort ? " single-col" : ""}">${renderMarkdown(body)}</div>`;
       } else {
         const placeholder = project.topic
           ? `本论文围绕「${escapeHtml(project.topic)}」展开研究。当前项目尚在推进，论文产物稍后自动同步到看板。`
@@ -5880,6 +5941,49 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#39;");
+    }
+
+    // 简易 Markdown → HTML 渲染器
+    function renderMarkdown(text) {
+      if (!text) return "";
+      let html = escapeHtml(text);
+      // 代码块 (```...```)
+      html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+        return `<pre><code>${code.trim()}</code></pre>`;
+      });
+      // 行内代码
+      html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+      // 标题
+      html = html.replace(/^####\s+(.+)$/gm, '<h4>$1</h4>');
+      html = html.replace(/^###\s+(.+)$/gm, '<h3>$1</h3>');
+      html = html.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
+      html = html.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
+      // 粗体和斜体
+      html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+      html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      // 引用块
+      html = html.replace(/^&gt;\s?(.+)$/gm, '<blockquote>$1</blockquote>');
+      // 合并连续 blockquote
+      html = html.replace(/<\/blockquote>\n<blockquote>/g, '\n');
+      // 无序列表
+      html = html.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
+      html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+      // 有序列表
+      html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+      // 水平线
+      html = html.replace(/^---+$/gm, '<hr>');
+      // 段落：将连续非空行包装为 <p>，空行分隔
+      const blocks = html.split(/\n\n+/);
+      html = blocks.map(block => {
+        block = block.trim();
+        if (!block) return "";
+        // 已经是块级元素则不包装
+        if (/^<(h[1-4]|ul|ol|li|pre|blockquote|hr|table)/.test(block)) return block;
+        // 将单个换行转为 <br>
+        return `<p>${block.replace(/\n/g, '<br>')}</p>`;
+      }).join("\n");
+      return html;
     }
 
     // ---------- 产出节奏折线图 ----------
