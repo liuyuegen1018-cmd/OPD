@@ -1881,11 +1881,16 @@
     }
 
     .kpi-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
+      background:
+        radial-gradient(500px 160px at -10% -40%, rgba(204, 180, 132, 0.10), transparent 60%),
+        linear-gradient(180deg, #fffdf7 0%, #faf6ea 100%);
+      border: 1px solid #e3ddcc;
       border-radius: 10px;
-      padding: 14px 16px;
-      box-shadow: var(--shadow);
+      padding: 14px 18px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        0 1px 2px rgba(60, 48, 30, 0.05),
+        0 14px 36px -22px rgba(60, 48, 30, 0.2);
       display: grid;
       gap: 6px;
       position: relative;
@@ -1909,8 +1914,12 @@
     .kpi-card.kpi-violet::after { background: var(--violet); }
 
     .kpi-label {
-      color: var(--muted);
-      font-size: 12px;
+      font-family: var(--font-sans);
+      color: #8a7f5c;
+      font-size: 10.5px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1933,23 +1942,29 @@
     .kpi-card.kpi-violet .kpi-icon { background: #f1ecfa; color: var(--violet); }
 
     .kpi-value {
-      font-size: 28px;
-      font-weight: 820;
+      font-family: var(--font-serif);
+      font-size: 30px;
+      font-weight: 700;
       line-height: 1.1;
-      color: var(--text);
-      letter-spacing: -0.5px;
+      color: #141726;
+      letter-spacing: -0.01em;
     }
 
     .kpi-value .unit {
-      font-size: 14px;
+      font-family: var(--font-sans);
+      font-size: 12px;
       font-weight: 600;
-      color: var(--muted);
-      margin-left: 3px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8a7f5c;
+      margin-left: 5px;
     }
 
     .kpi-sub {
-      color: var(--muted);
-      font-size: 12px;
+      font-family: var(--font-sans);
+      color: #6c6444;
+      font-size: 11.5px;
+      line-height: 1.5;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -1969,432 +1984,749 @@
     .kpi-trend.down { color: var(--red); background: #fff0ee; }
     .kpi-trend.flat { color: var(--muted); background: #eef2f7; }
 
-    /* 论文卡片 */
+    /* ============ 论文档案：学术期刊质感 ============ */
     .paper-filter-bar {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
 
     .filter-chip {
-      height: 30px;
+      height: 28px;
       padding: 0 12px;
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--muted);
-      border-radius: 999px;
+      border: 1px solid #d7d1c4;
+      background: #fbf8f1;
+      color: #5b5341;
+      border-radius: 2px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 11px;
+      font-family: var(--font-sans);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
+      transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
     }
 
+    .filter-chip:hover { border-color: #8b6f3f; color: #2f2820; }
+
     .filter-chip.active {
-      background: var(--blue);
-      border-color: var(--blue);
-      color: #fff;
+      background: #2d2a24;
+      border-color: #2d2a24;
+      color: #f6efde;
     }
 
     .filter-chip .chip-count {
-      background: rgba(255, 255, 255, 0.25);
-      border-radius: 999px;
-      padding: 1px 7px;
-      font-size: 11px;
-      font-weight: 680;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 2px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: inherit;
+    }
+
+    .filter-chip.active .chip-count {
+      background: rgba(246, 239, 222, 0.2);
+      color: #f6efde;
     }
 
     .filter-chip:not(.active) .chip-count {
-      background: #eef2f7;
-      color: var(--muted);
+      background: #efe9d8;
+      color: #7a6d4f;
     }
 
-    /* 论文卡片区域：可滚动容器 */
+    /* ========== 论文看板：标准学术论文版式 ==========
+       设计要点：
+       1) 每张卡 = 一页真实论文（居中标题、意大利体作者、双栏正文摘要）
+       2) 单列纵向排列 + 外层滚动，像翻阅期刊
+       3) 去掉侧边 meta 栏，meta 作为页脚小标组排列，保持克制
+    */
+
+    /* 外框：温润的米色纸面"书架" */
+    .paper-shelf {
+      background:
+        radial-gradient(1400px 260px at 0% -10%, rgba(204, 180, 132, 0.14), transparent 60%),
+        radial-gradient(1000px 220px at 100% 110%, rgba(204, 180, 132, 0.10), transparent 60%),
+        linear-gradient(180deg, #faf6eb 0%, #f3ece0 100%);
+      border: 1px solid #e3ddcc;
+      border-radius: 10px;
+      padding: 18px 20px 22px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.7),
+        inset 0 0 0 1px rgba(139, 109, 58, 0.03),
+        0 1px 2px rgba(60, 48, 30, 0.05);
+    }
+
     .paper-grid-wrap {
-      max-height: 620px;
+      max-height: 760px;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 4px 10px 4px 2px;
-      margin-right: -6px;
+      padding: 8px 18px 8px 4px;
+      margin-right: -10px;
       scrollbar-width: thin;
-      scrollbar-color: #c5cedd transparent;
+      scrollbar-color: #c9bf9e transparent;
     }
 
-    .paper-grid-wrap::-webkit-scrollbar { width: 8px; }
+    .paper-grid-wrap::-webkit-scrollbar { width: 10px; }
     .paper-grid-wrap::-webkit-scrollbar-track { background: transparent; }
     .paper-grid-wrap::-webkit-scrollbar-thumb {
-      background: #d4dbe8;
-      border-radius: 4px;
+      background: #d5cbac;
+      border-radius: 5px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
     }
-    .paper-grid-wrap::-webkit-scrollbar-thumb:hover { background: #b6c0d4; }
+    .paper-grid-wrap::-webkit-scrollbar-thumb:hover { background: #b9ad89; background-clip: padding-box; }
 
+    /* 单列纵向书架列表 —— 最大 820px，模拟 A4 印张 */
     .paper-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 16px;
-    }
-
-    /* 类论文预览卡片：学术字体、排版、纸张质感 */
-    .paper-card {
-      position: relative;
-      background: linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 22px 22px 16px 26px;
-      min-height: 280px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 26px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* 一张卡片 = 一页期刊论文 */
+    .paper-card {
+      position: relative;
+      background: linear-gradient(180deg, #ffffff 0%, #fdfbf3 100%);
+      border: 1px solid #e4ddca;
+      border-radius: 4px;
+      padding: 44px 64px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
       box-shadow:
-        0 1px 2px rgba(15, 23, 42, 0.04),
-        0 4px 10px rgba(15, 23, 42, 0.035);
-      transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+        0 1px 0 rgba(60, 48, 30, 0.04),
+        0 2px 4px rgba(60, 48, 30, 0.05),
+        0 18px 32px -20px rgba(60, 48, 30, 0.18);
+      transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
       cursor: pointer;
       overflow: hidden;
       font-family: var(--font-serif);
+      color: #141726;
     }
 
     .paper-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
+      border-color: #c8bf9f;
       box-shadow:
-        0 6px 14px rgba(15, 23, 42, 0.08),
-        0 18px 36px rgba(15, 23, 42, 0.09);
-      border-color: #c0cadf;
+        0 2px 0 rgba(60, 48, 30, 0.05),
+        0 16px 28px -12px rgba(60, 48, 30, 0.14),
+        0 36px 64px -28px rgba(60, 48, 30, 0.26);
     }
 
-    /* 左侧学科色条（替代顶部色条） */
+    /* 左侧色条：暗示状态，又不过度抢眼 */
     .paper-card::before {
       content: "";
       position: absolute;
-      top: 0;
       left: 0;
-      bottom: 0;
-      width: 4px;
-      background: var(--blue);
-    }
-
-    /* 右上角淡水印，增加"论文"质感 */
-    .paper-card::after {
-      content: "§";
-      position: absolute;
-      right: 14px;
-      top: 10px;
-      font-family: var(--font-serif);
-      font-size: 34px;
-      color: #eef2f9;
-      font-weight: 400;
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .paper-card.paper-done::before { background: var(--green); }
-    .paper-card.paper-failed::before { background: var(--red); }
-    .paper-card.paper-blocked::before,
-    .paper-card.paper-rejected::before { background: var(--amber); }
-    .paper-card.paper-scheduled::before,
-    .paper-card.paper-queued::before { background: #9ca3af; }
-    .paper-card.paper-interrupted::before { background: var(--amber); }
-
-    .paper-venue {
-      font-family: var(--font-sans);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      font-size: 10.5px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .paper-venue .venue-tag {
-      color: var(--blue);
-    }
-
-    .paper-venue .venue-dot {
+      top: 20px;
+      bottom: 20px;
       width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: #c4cbdb;
-      display: inline-block;
+      background: #d5cbac;
     }
+    .paper-card.paper-done::before { background: var(--green); }
+    .paper-card.paper-failed::before,
+    .paper-card.paper-rejected::before { background: var(--red); }
+    .paper-card.paper-blocked::before,
+    .paper-card.paper-interrupted::before { background: var(--amber); }
+    .paper-card.paper-scheduled::before,
+    .paper-card.paper-queued::before { background: #9a9680; }
+    .paper-card.paper-active::before { background: var(--blue); }
 
-    .paper-head {
+    /* running-head：期刊名 · 卷号 · 年份 · 页码 · 状态 */
+    .paper-runhead {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--font-sans);
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #8a7f5c;
+      font-weight: 700;
+      padding-bottom: 14px;
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .paper-runhead::before,
+    .paper-runhead::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: #c8bf9f;
+    }
+    .paper-runhead::before { bottom: 4px; }
+    .paper-runhead::after { bottom: 0; }
+
+    .paper-runhead .runhead-venue {
+      color: #5d5436;
+    }
+
+    .paper-runhead .runhead-right {
+      display: inline-flex;
+      align-items: center;
       gap: 12px;
     }
 
+    .paper-runhead .runhead-status {
+      font-family: var(--font-sans);
+      font-size: 9.5px;
+      letter-spacing: 0.2em;
+      padding: 3px 12px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      background: rgba(255, 255, 255, 0.55);
+      font-weight: 700;
+    }
+
+    .paper-card.paper-done .runhead-status { color: var(--green); }
+    .paper-card.paper-failed .runhead-status,
+    .paper-card.paper-rejected .runhead-status { color: var(--red); }
+    .paper-card.paper-blocked .runhead-status,
+    .paper-card.paper-interrupted .runhead-status { color: var(--amber); }
+    .paper-card.paper-scheduled .runhead-status,
+    .paper-card.paper-queued .runhead-status { color: #8a93a7; }
+    .paper-card.paper-active .runhead-status { color: var(--blue); }
+
+    /* 标题：居中，大号衬线，用一根细线垫底 */
     .paper-title {
       font-family: var(--font-serif);
-      font-size: 18px;
+      font-size: 24px;
       font-weight: 700;
-      line-height: 1.3;
-      color: var(--text);
-      letter-spacing: -0.005em;
+      line-height: 1.26;
+      color: #0f1221;
+      letter-spacing: -0.012em;
+      text-align: center;
+      margin: 0 auto 10px;
+      padding: 0 8px;
+      max-width: 42em;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      flex: 1;
-      margin: 0;
     }
 
     .paper-authors {
       font-family: var(--font-serif);
-      font-size: 12.5px;
-      color: #4c5670;
+      font-size: 14px;
+      color: #3d405c;
       font-style: italic;
-      line-height: 1.45;
+      line-height: 1.6;
+      text-align: center;
+      margin: 0 auto 4px;
+      padding: 0 12px;
+      max-width: 40em;
       display: -webkit-box;
-      -webkit-line-clamp: 1;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      margin-top: 2px;
+    }
+
+    .paper-authors .author-sep {
+      color: #a09c84;
+      margin: 0 7px;
+      font-style: normal;
+    }
+
+    .paper-affil {
+      font-family: var(--font-serif);
+      font-size: 12px;
+      color: #6c6444;
+      font-style: italic;
+      text-align: center;
+      margin: 2px 0 0;
+      letter-spacing: 0.01em;
+    }
+
+    /* 标题区与摘要之间：一根装饰小花/双线 */
+    .paper-ornament {
+      text-align: center;
+      color: #b8ad8c;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      letter-spacing: 1em;
+      margin: 20px 0 18px;
+      user-select: none;
+      line-height: 1;
+    }
+
+    /* 摘要：双栏 justified，像真实期刊一样 */
+    .paper-abstract-wrap {
+      margin: 0;
     }
 
     .paper-section-label {
       font-family: var(--font-sans);
       font-size: 9.5px;
-      letter-spacing: 0.18em;
-      color: #9098ab;
+      letter-spacing: 0.32em;
+      color: #7c7149;
       text-transform: uppercase;
       font-weight: 700;
-      margin-top: 6px;
+      text-align: center;
+      margin: 0 auto 10px;
+      position: relative;
+      padding: 0 14px;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #ffffff 0%, #fdfbf3 100%);
+    }
+
+    .paper-abstract-label-wrap {
+      text-align: center;
+      margin-bottom: 10px;
+      border-top: 1px solid #e4ddca;
+      position: relative;
+      height: 0;
     }
 
     .paper-abstract {
       font-family: var(--font-serif);
-      font-size: 13px;
-      line-height: 1.62;
-      color: #323c54;
-      display: -webkit-box;
-      -webkit-line-clamp: 5;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      font-size: 13.5px;
+      line-height: 1.78;
+      color: #1e2232;
       text-align: justify;
       hyphens: auto;
-      flex: 1;
-      min-height: 90px;
+      margin: 0;
+      column-count: 2;
+      column-gap: 32px;
+      column-rule: 1px solid #ece4cc;
+      max-height: 11.4em;
+      overflow: hidden;
+      text-indent: 1.6em;
     }
 
     .paper-abstract.is-loading,
     .paper-abstract.is-empty {
+      column-count: 1;
+      column-rule: none;
+      text-indent: 0;
+      text-align: center;
       font-style: italic;
-      color: #a6adbe;
+      color: #a49b7c;
+      max-height: none;
+    }
+
+    /* 页脚：Keywords 左，meta 右，模仿"在线预印本"信息栏 */
+    .paper-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 18px;
+      padding-top: 16px;
+      margin-top: 22px;
+      border-top: 1px solid #e4ddca;
+      position: relative;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: #7c7149;
+    }
+    .paper-footer::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -4px;
+      height: 1px;
+      background: #e4ddca;
     }
 
     .paper-keywords {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
-      margin-top: 4px;
+      gap: 4px 12px;
+      align-items: center;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .paper-keywords::before {
+      content: "Keywords ·";
       font-family: var(--font-sans);
+      font-size: 9.5px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #8a7f5c;
+      font-weight: 700;
+      margin-right: 6px;
     }
 
     .paper-keyword {
-      font-size: 10.5px;
-      padding: 2px 8px;
-      background: #eef2f9;
-      color: #47536d;
-      border-radius: 3px;
-      font-weight: 600;
+      font-family: var(--font-serif);
+      font-size: 12px;
+      padding: 0;
+      background: transparent;
+      color: #4a4b66;
+      border-radius: 0;
+      font-weight: 400;
+      font-style: italic;
       letter-spacing: 0.01em;
     }
 
-    .paper-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding-top: 10px;
-      margin-top: auto;
-      border-top: 1px solid #edf0f6;
-      font-family: var(--font-sans);
-      font-size: 11px;
-      color: var(--muted);
+    .paper-keyword + .paper-keyword::before {
+      content: "·";
+      color: #b8ad8c;
+      margin-right: 10px;
+      font-style: normal;
     }
 
-    .paper-footer-meta {
+    /* 页脚右侧 meta 小字组：Stage · Authors · Artifacts · Revised */
+    .paper-meta-inline {
       display: flex;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 0 14px;
+      justify-content: flex-end;
+      align-items: baseline;
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      color: #8a7f5c;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .paper-footer-meta strong {
-      color: var(--text);
+    .paper-meta-inline .meta-pair {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .paper-meta-inline .meta-k {
+      font-family: var(--font-sans);
+      font-size: 9.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #8a7f5c;
       font-weight: 700;
     }
 
+    .paper-meta-inline .meta-val {
+      font-family: var(--font-serif);
+      font-size: 13px;
+      font-weight: 700;
+      color: #2a2d45;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .paper-meta-inline .meta-sep {
+      color: #d5cbac;
+      margin: 0 2px;
+    }
+
     .paper-open-hint {
-      color: var(--blue);
-      font-weight: 600;
+      color: #5d5436;
+      font-weight: 700;
+      font-size: 10.5px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      transition: transform 140ms ease, opacity 140ms ease;
-      opacity: 0.8;
+      gap: 6px;
+      transition: transform 180ms ease, color 180ms ease;
+      white-space: nowrap;
+      margin-top: 10px;
     }
 
     .paper-card:hover .paper-open-hint {
-      transform: translateX(2px);
-      opacity: 1;
+      transform: translateX(3px);
+      color: var(--blue);
     }
 
-    /* ---- 论文详情弹窗 ---- */
+    .paper-read-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+    }
+
+    /* 窄屏时收起右侧 meta 列 */
+    @media (max-width: 780px) {
+      .paper-card { padding: 28px 24px 22px; }
+      .paper-abstract { column-count: 1; column-rule: none; }
+      .paper-footer { flex-direction: column; align-items: flex-start; }
+      .paper-meta-inline { justify-content: flex-start; }
+    }
+
+    /* ---- 论文详情弹窗：像期刊首页 ---- */
     .paper-detail-card {
-      width: min(840px, 100%);
+      width: min(880px, 100%);
       max-height: calc(100vh - 60px);
       display: grid;
       grid-template-rows: auto 1fr auto;
-      background: #fdfdfd;
+      background:
+        radial-gradient(800px 200px at 10% -6%, rgba(204, 180, 132, 0.14), transparent 60%),
+        linear-gradient(180deg, #fdfbf3 0%, #faf6ea 100%);
+      border: 1px solid #e3ddcc;
+      box-shadow:
+        0 1px 0 rgba(60, 48, 30, 0.04),
+        0 30px 80px rgba(30, 22, 8, 0.28);
     }
 
     .paper-detail-header {
-      padding: 18px 28px 14px;
-      border-bottom: 1px solid var(--border);
+      padding: 16px 32px 14px;
+      border-bottom: 1px solid #e3ddcc;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 12px;
-      background: linear-gradient(180deg, #f7f9fc 0%, #fdfdfd 100%);
+      background: transparent;
     }
 
     .paper-detail-venue {
       font-family: var(--font-sans);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      font-size: 11px;
+      letter-spacing: 0.22em;
+      color: #8a7f5c;
+      font-size: 10.5px;
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
-    .paper-detail-venue .venue-tag { color: var(--blue); font-weight: 800; }
+    .paper-detail-venue .venue-tag { color: #5d5436; font-weight: 800; letter-spacing: 0.22em; }
     .paper-detail-venue .venue-dot {
       width: 3px; height: 3px; border-radius: 50%;
-      background: #c4cbdb; display: inline-block;
+      background: #c8bf9f; display: inline-block;
+    }
+
+    .paper-detail-venue .status-pill {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      background: rgba(255, 255, 255, 0.55);
     }
 
     .paper-detail-body {
-      padding: 22px 32px 12px;
+      padding: 36px 56px 20px;
       overflow: auto;
       font-family: var(--font-serif);
       color: var(--text);
+      background:
+        linear-gradient(180deg, #ffffff 0%, #fdfbf3 100%);
+      border-top: 1px solid #ece4cc;
+      border-bottom: 1px solid #ece4cc;
     }
 
     .paper-detail-body::-webkit-scrollbar { width: 8px; }
-    .paper-detail-body::-webkit-scrollbar-thumb { background: #d4dbe8; border-radius: 4px; }
+    .paper-detail-body::-webkit-scrollbar-thumb { background: #d5cbac; border-radius: 4px; }
+    .paper-detail-body::-webkit-scrollbar-thumb:hover { background: #b9ad89; }
+
+    /* 标题区 */
+    .paper-detail-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #7c7149;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .paper-detail-eyebrow::before,
+    .paper-detail-eyebrow::after {
+      content: "";
+      display: inline-block;
+      width: 42px;
+      height: 1px;
+      background: #c8bf9f;
+      vertical-align: middle;
+      margin: 0 14px;
+    }
 
     .paper-detail-title {
       font-family: var(--font-serif);
-      font-size: 26px;
-      line-height: 1.28;
+      font-size: 30px;
+      line-height: 1.24;
       font-weight: 700;
-      color: var(--text);
-      margin: 0 0 8px;
-      letter-spacing: -0.01em;
+      color: #141726;
+      margin: 0 auto 14px;
+      letter-spacing: -0.012em;
+      text-align: center;
+      max-width: 40em;
     }
 
     .paper-detail-authors {
       font-family: var(--font-serif);
       font-style: italic;
-      color: #4c5670;
-      font-size: 14px;
-      margin: 4px 0 2px;
-      line-height: 1.55;
+      color: #3d405c;
+      font-size: 15px;
+      margin: 6px 0 4px;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .paper-detail-authors .author-sep {
+      color: #9a9680;
+      font-style: normal;
+      margin: 0 8px;
     }
 
     .paper-detail-affil {
       font-family: var(--font-serif);
       font-size: 12.5px;
-      color: #6c7590;
-      margin: 0 0 6px;
+      color: #6c6444;
+      margin: 0 0 16px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* 双细线分隔 */
+    .paper-detail-rule {
+      border: none;
+      border-top: 1px solid #c8bf9f;
+      border-bottom: 1px solid #c8bf9f;
+      height: 2px;
+      margin: 18px 0 22px;
     }
 
     .paper-detail-meta-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px 14px;
-      padding: 14px 16px;
-      background: #f7f9fc;
-      border: 1px solid #eceff6;
-      border-radius: 6px;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 2px 0;
+      padding: 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
       font-family: var(--font-sans);
-      margin: 16px 0 20px;
+      margin: 4px 0 24px;
     }
 
+    .paper-detail-meta-item {
+      padding: 10px 16px;
+      border-right: 1px solid #ece4cc;
+      text-align: center;
+    }
+    .paper-detail-meta-item:last-child { border-right: none; }
+
     .paper-detail-meta-item .meta-k {
-      font-size: 10.5px;
+      font-size: 9.5px;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
+      letter-spacing: 0.24em;
+      color: #8a7f5c;
       font-weight: 700;
     }
 
     .paper-detail-meta-item .meta-v {
-      font-size: 14px;
-      color: var(--text);
-      font-weight: 600;
-      margin-top: 3px;
+      font-family: var(--font-serif);
+      font-size: 17px;
+      color: #141726;
+      font-weight: 700;
+      margin-top: 4px;
     }
 
     .paper-detail-section-title {
       font-family: var(--font-sans);
-      font-size: 11px;
-      letter-spacing: 0.2em;
+      font-size: 10.5px;
+      letter-spacing: 0.3em;
       text-transform: uppercase;
-      color: #8a93a7;
+      color: #7c7149;
       font-weight: 700;
-      margin: 18px 0 10px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid #eceff6;
+      margin: 26px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e4ddca;
+      text-align: center;
+      position: relative;
     }
 
     .paper-detail-abstract {
       font-family: var(--font-serif);
       font-size: 15px;
-      line-height: 1.78;
+      line-height: 1.82;
       text-align: justify;
       hyphens: auto;
       color: #1d2537;
       white-space: pre-wrap;
+      column-count: 2;
+      column-gap: 32px;
+      column-rule: 1px solid #ece4cc;
+      text-indent: 1.6em;
+    }
+
+    .paper-detail-abstract.single-col {
+      column-count: 1;
+      column-rule: none;
+      text-indent: 0;
     }
 
     .paper-detail-keywords {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin: 10px 0 4px;
-      font-family: var(--font-sans);
+      justify-content: center;
+      gap: 6px 16px;
+      margin: 8px 0 4px;
+      font-family: var(--font-serif);
     }
 
     .paper-detail-keywords .paper-keyword {
-      font-size: 11.5px;
-      padding: 3px 10px;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      font-style: italic;
+      color: #4a4b66;
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+      font-weight: 400;
+    }
+
+    .paper-detail-keywords .paper-keyword + .paper-keyword::before {
+      content: "·";
+      color: #b8ad8c;
+      margin-right: 14px;
+      font-style: normal;
     }
 
     .paper-detail-empty {
       font-family: var(--font-serif);
       font-style: italic;
-      color: #a6adbe;
+      color: #a6a080;
       font-size: 14px;
       padding: 14px 0;
+      text-align: center;
     }
 
     .paper-detail-actions {
-      padding: 14px 24px;
-      border-top: 1px solid var(--border);
+      padding: 14px 28px;
+      border-top: 1px solid #e3ddcc;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       gap: 10px;
-      background: #fbfcfe;
+      background: transparent;
+      align-items: center;
+    }
+    .paper-detail-actions .footer-note {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8a7f5c;
+    }
+    .paper-detail-actions .footer-note-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 760px) {
+      .paper-detail-body { padding: 24px 22px 12px; }
+      .paper-detail-title { font-size: 24px; }
+      .paper-detail-abstract { column-count: 1; column-rule: none; }
+      .paper-detail-meta-item { border-right: none; border-bottom: 1px solid #ece4cc; }
+      .paper-detail-meta-item:last-child { border-bottom: none; }
     }
 
     /* 图表通用 */
@@ -2419,6 +2751,157 @@
       width: 100%;
       display: block;
       overflow: visible;
+    }
+
+    /* 论文档案面板：与下方图版相同的底色基调 */
+    .paper-archive-panel {
+      background:
+        radial-gradient(1000px 240px at -10% -40%, rgba(204, 180, 132, 0.08), transparent 55%),
+        linear-gradient(180deg, #fffdf7 0%, #faf6ea 100%);
+      border: 1px solid #e3ddcc;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        0 1px 2px rgba(60, 48, 30, 0.05),
+        0 14px 36px -20px rgba(60, 48, 30, 0.18);
+    }
+    .paper-archive-panel > .panel-header { border-bottom-color: #e3ddcc; }
+    .paper-archive-panel .panel-title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      letter-spacing: 0.01em;
+    }
+    .paper-archive-panel .panel-subtitle {
+      font-family: var(--font-sans);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-size: 10.5px;
+      color: #8a7f5c;
+      font-weight: 700;
+    }
+
+    /* 图版面板：像期刊插图框 */
+    .figure-panel {
+      position: relative;
+      background:
+        radial-gradient(900px 220px at -6% -40%, rgba(204, 180, 132, 0.08), transparent 55%),
+        linear-gradient(180deg, #fffdf7 0%, #faf6ea 100%);
+      border: 1px solid #e3ddcc;
+      border-radius: 8px;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        0 1px 2px rgba(60, 48, 30, 0.05),
+        0 14px 36px -20px rgba(60, 48, 30, 0.18);
+      overflow: hidden;
+    }
+
+    .figure-panel > .panel-header {
+      border-bottom-color: #e3ddcc;
+      padding: 16px 20px 14px;
+      background: transparent;
+    }
+
+    .figure-panel .panel-title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 700;
+      color: #1b2031;
+      letter-spacing: 0.01em;
+    }
+
+    .figure-panel .panel-subtitle {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8a7f5c;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+
+    .figure-panel .status-pill {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid #d5cbac;
+      color: #5d5436;
+    }
+
+    .figure-corner {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-family: var(--font-sans);
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #b6a878;
+      font-weight: 700;
+      padding: 3px 10px;
+      border: 1px solid #d5cbac;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.6);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Fig.角标出现时把 status-pill 让位 */
+    .figure-panel .figure-corner + .panel-header > div:last-child .status-pill {
+      margin-right: 56px;
+    }
+
+    .figure-panel .chart-canvas {
+      padding: 14px 20px 4px;
+      background:
+        linear-gradient(180deg, #ffffff 0%, #fdfbf3 100%);
+      border-top: 1px solid #ece4cc;
+      border-bottom: 1px solid #ece4cc;
+    }
+
+    .figure-caption {
+      padding: 10px 20px 14px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 12.5px;
+      color: #4a4630;
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    /* 坐标轴细化 */
+    .figure-panel .trend-axis-text,
+    .figure-panel .heat-axis-text {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      letter-spacing: 0.08em;
+      fill: #8a7f5c;
+    }
+
+    .figure-panel .trend-axis-line { stroke: #c8bf9f; }
+    .figure-panel .trend-grid-line { stroke: #ece4cc; stroke-dasharray: 2 4; }
+
+    .figure-panel .heat-cell-rect { stroke: #faf6ea; }
+    .figure-panel .chart-legend {
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      letter-spacing: 0.12em;
+      color: #5d5436;
+      padding: 8px 0 2px;
+    }
+
+    /* 词云面板细化 */
+    .figure-panel .word-chip { font-family: var(--font-serif); font-weight: 700; letter-spacing: 0.005em; }
+
+    /* 窄屏时 Fig. 标签移到头部下方 */
+    @media (max-width: 720px) {
+      .figure-corner {
+        position: static;
+        display: inline-block;
+        margin: 10px 12px 0;
+      }
     }
 
     .chart-empty {
@@ -2779,63 +3262,73 @@
         <div class="dashboard-grid">
           <div class="kpi-row" id="kpiRow"></div>
 
-          <div class="panel">
+          <div class="panel paper-archive-panel">
             <div class="panel-header">
               <div>
-                <div class="panel-title">论文档案</div>
+                <div class="panel-title">论文档案 · Publication Archive</div>
                 <div class="panel-subtitle">所有科研项目的标题、状态、摘要和协作信息</div>
               </div>
               <div class="paper-filter-bar" id="paperFilterBar"></div>
             </div>
             <div class="panel-body">
-              <div class="paper-grid-wrap" id="paperGridWrap">
-                <div class="paper-grid" id="paperGrid"></div>
+              <div class="paper-shelf">
+                <div class="paper-grid-wrap" id="paperGridWrap">
+                  <div class="paper-grid" id="paperGrid"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="chart-grid">
-            <div class="panel">
+            <div class="panel figure-panel">
+              <div class="figure-corner">Fig. 1</div>
               <div class="panel-header">
                 <div>
-                  <div class="panel-title">产出节奏</div>
+                  <div class="panel-title">产出节奏 · Publication Cadence</div>
                   <div class="panel-subtitle">按周聚合的论文完成数与平均耗时</div>
                 </div>
                 <span class="status-pill active" id="trendRangePill">最近 8 周</span>
               </div>
               <div class="chart-canvas" id="trendChart"></div>
+              <div class="figure-caption">Figure 1 · 每周归档论文数量（蓝实线）与平均完成耗时（琥珀虚线）随时间的演化。</div>
             </div>
 
-            <div class="panel">
+            <div class="panel figure-panel">
+              <div class="figure-corner">Fig. 2</div>
               <div class="panel-header">
                 <div>
-                  <div class="panel-title">主题词云</div>
+                  <div class="panel-title">主题词云 · Keyword Landscape</div>
                   <div class="panel-subtitle">从所有项目主题中提取的关键词，字号代表出现频次</div>
                 </div>
               </div>
               <div class="chart-canvas" id="themeCloud"></div>
+              <div class="figure-caption">Figure 2 · 全部科研项目主题抽取后的加权关键词场。</div>
             </div>
           </div>
 
           <div class="chart-grid-bottom">
-            <div class="panel">
+            <div class="panel figure-panel">
+              <div class="figure-corner">Fig. 3</div>
               <div class="panel-header">
                 <div>
-                  <div class="panel-title">Stage 耗时热力图</div>
+                  <div class="panel-title">Stage 耗时热力图 · Stage-wise Runtime</div>
                   <div class="panel-subtitle">每个项目各阶段的实际耗时，颜色越深耗时越长</div>
                 </div>
               </div>
               <div class="chart-canvas" id="stageHeatmap"></div>
+              <div class="figure-caption">Figure 3 · 行为项目、列为科研阶段；单元格颜色深度编码该阶段耗时。</div>
             </div>
 
-            <div class="panel">
+            <div class="panel figure-panel">
+              <div class="figure-corner">Fig. 4</div>
               <div class="panel-header">
                 <div>
-                  <div class="panel-title">产物类型分布</div>
+                  <div class="panel-title">产物类型分布 · Artifact Taxonomy</div>
                   <div class="panel-subtitle">所有项目产物按文件类型的占比</div>
                 </div>
               </div>
               <div class="chart-canvas" id="artifactPie"></div>
+              <div class="figure-caption">Figure 4 · 所有研究流水线产物的文件类型占比（按产物数量加权）。</div>
             </div>
           </div>
         </div>
@@ -2963,12 +3456,15 @@
     <div class="modal-card paper-detail-card" role="dialog" aria-modal="true" aria-labelledby="paperDetailTitle">
       <div class="paper-detail-header">
         <div class="paper-detail-venue" id="paperDetailVenue"></div>
-        <button class="drawer-close" id="paperDetailClose" aria-label="关闭论文详情" style="font-size: 18px;">×</button>
+        <button class="drawer-close" id="paperDetailClose" aria-label="关闭论文详情" style="font-size: 18px; color: #5d5436;">×</button>
       </div>
       <div class="paper-detail-body" id="paperDetailBody"></div>
       <div class="paper-detail-actions">
-        <button class="btn" id="paperDetailCloseBtn" type="button">关闭</button>
-        <button class="btn primary" id="paperDetailGotoBtn" type="button">进入项目管理 →</button>
+        <span class="footer-note">Auto-generated by Research-OPD pipeline</span>
+        <div class="footer-note-right">
+          <button class="btn" id="paperDetailCloseBtn" type="button">关闭</button>
+          <button class="btn primary" id="paperDetailGotoBtn" type="button">进入项目管理 →</button>
+        </div>
       </div>
     </div>
   </div>
@@ -5079,6 +5575,37 @@
       return { venue: "Research-OPD · 技术报告", stage: stageName ? `Stage ${stageNum} · ${stageName}` : `Stage ${stageNum}`, year: String(year) };
     }
 
+    // 项目顺序内的页码（用作 running-head 的 pp. 展示）
+    function paperRunheadMeta(project, index = 0) {
+      const stageNum = Number(project.stage || 1);
+      const year = new Date().getFullYear();
+      const volume = Math.max(1, year - 2023);
+      const issue = ((stageNum - 1) % 6) + 1;
+      const startPage = 101 + index * 16;
+      const endPage = startPage + 15;
+      return {
+        left: `Research-OPD · Vol. ${volume}, No. ${issue} · ${year}`,
+        page: `pp. ${startPage}–${endPage}`,
+        article: `Article ${String(index + 1).padStart(2, "0")}`
+      };
+    }
+
+    // 状态 → 短标签（running-head 右侧）
+    function paperStatusLabel(project) {
+      const map = {
+        done: "Published",
+        active: "In Progress",
+        scheduled: "Scheduled",
+        queued: "Under Review",
+        failed: "Retracted",
+        blocked: "Pending",
+        interrupted: "On Hold",
+        rejected: "Rejected"
+      };
+      const group = dashboardStatusGroup(project.status);
+      return map[group] || (project.statusText || "Working Paper");
+    }
+
     function renderPaperCards() {
       const root = document.getElementById("paperGrid");
       if (!root) return;
@@ -5104,7 +5631,7 @@
         return;
       }
 
-      root.innerHTML = filtered.map(project => {
+      root.innerHTML = filtered.map((project, index) => {
         const statusGroup = dashboardStatusGroup(project.status);
         const cache = abstractCache.get(project.id);
         let abstractHtml;
@@ -5125,9 +5652,12 @@
         const authors = buildPaperAuthors(project);
         const authorsLine = formatAuthorsLine(authors);
         const keywords = buildPaperKeywords(project);
-        const { venue, stage, year } = paperVenueLabel(project);
+        const { stage, year } = paperVenueLabel(project);
+        const runhead = paperRunheadMeta(project, index);
+        const statusLabel = paperStatusLabel(project);
         const empCount = countParticipatingEmployees(project);
         const artifactCount = artifacts.filter(a => a.project === project.id).length;
+        const progress = Math.round(project.progress || 0);
         const lastTimestamp = (project.timeline || [])
           .map(event => new Date(event.timestamp).getTime())
           .filter(value => !Number.isNaN(value));
@@ -5135,31 +5665,52 @@
 
         const keywordsHtml = keywords.length
           ? `<div class="paper-keywords">${keywords.map(k => `<span class="paper-keyword">${escapeHtml(k)}</span>`).join("")}</div>`
-          : "";
+          : `<div class="paper-keywords"><span class="paper-keyword">${escapeHtml(stage)}</span></div>`;
+
+        // 作者列表以 · 分隔
+        const authorsHtml = authorsLine.split(/[、,]/).map(s => escapeHtml(s.trim())).filter(Boolean)
+          .join('<span class="author-sep">·</span>');
 
         return `
           <article class="paper-card paper-${statusGroup}" data-run="${project.id}" role="button" tabindex="0" aria-label="查看论文详情：${escapeHtml(project.name || project.topic || project.id)}">
-            <div class="paper-venue">
-              <span class="venue-tag">${escapeHtml(venue)}</span>
-              <span class="venue-dot"></span>
-              <span>${escapeHtml(stage)}</span>
-              <span class="venue-dot"></span>
-              <span>${escapeHtml(year)}</span>
+            <div class="paper-runhead">
+              <span class="runhead-venue">${escapeHtml(runhead.left)}</span>
+              <span class="runhead-page">
+                <span class="runhead-status">${escapeHtml(statusLabel)}</span>
+                <span>${escapeHtml(runhead.article)} · ${escapeHtml(runhead.page)}</span>
+              </span>
             </div>
-            <div class="paper-head">
-              <h3 class="paper-title">${escapeHtml(project.name || project.topic || project.id)}</h3>
+            <h3 class="paper-title">${escapeHtml(project.name || project.topic || project.id)}</h3>
+            <div class="paper-authors">${authorsHtml || "一人科研部门 · 自动研究团队"}</div>
+            <div class="paper-abstract-wrap">
+              <div class="paper-section-label">Abstract</div>
+              ${abstractHtml}
             </div>
-            <div class="paper-authors">${escapeHtml(authorsLine)}</div>
-            <div class="paper-section-label">Abstract</div>
-            ${abstractHtml}
-            ${keywordsHtml}
-            <div class="paper-footer">
-              <div class="paper-footer-meta">
-                <span><strong>${empCount}</strong> 作者</span>
-                <span><strong>${artifactCount}</strong> 产物</span>
-                <span>${lastUpdated ? formatRelativeDate(new Date(lastUpdated)) : "未更新"}</span>
+            <div class="paper-meta">
+              <div class="paper-meta-row">
+                <span>Stage</span>
+                <span class="meta-val">${escapeHtml(stage)}</span>
               </div>
-              <span class="paper-open-hint">查看详情 →</span>
+              <div class="paper-meta-row">
+                <span>Progress</span>
+                <span class="meta-val">${progress}%</span>
+              </div>
+              <div class="paper-meta-row">
+                <span>Authors</span>
+                <span class="meta-val">${empCount}</span>
+              </div>
+              <div class="paper-meta-row">
+                <span>Artifacts</span>
+                <span class="meta-val">${artifactCount}</span>
+              </div>
+              <div class="paper-meta-row">
+                <span>Revised</span>
+                <span class="meta-val" style="font-size: 12px; font-weight: 600;">${lastUpdated ? escapeHtml(formatRelativeDate(new Date(lastUpdated))) : "—"}</span>
+              </div>
+            </div>
+            <div class="paper-footer">
+              ${keywordsHtml}
+              <span class="paper-open-hint">Read Full Text →</span>
             </div>
           </article>
         `;
@@ -5215,6 +5766,8 @@
       if (!project) return;
       const cache = abstractCache.get(runId);
       const { venue, stage, year } = paperVenueLabel(project);
+      const runhead = paperRunheadMeta(project, Math.max(0, projects.findIndex(p => p.id === runId)));
+      const statusLabel = paperStatusLabel(project);
       const authors = buildPaperAuthors(project);
       const authorsLine = formatAuthorsLine(authors);
       const keywords = buildPaperKeywords(project, 8);
@@ -5227,77 +5780,90 @@
       const lastUpdated = lastTimestamp.length ? Math.max(...lastTimestamp) : 0;
       const progress = Math.round(project.progress || 0);
 
-      // 摘要
+      // 摘要：期刊首页双栏首行缩进；若缺失则单栏提示
       let abstractSection;
+      let abstractIsShort = false;
       if (!cache || cache.status === "loading") {
         abstractSection = `<div class="paper-detail-empty">正在加载论文全文摘要…</div>`;
+        abstractIsShort = true;
       } else if (cache.status === "done" && (cache.fullText || cache.text)) {
-        abstractSection = `<div class="paper-detail-abstract">${escapeHtml(cache.fullText || cache.text)}</div>`;
+        const body = cache.fullText || cache.text;
+        abstractIsShort = String(body).length < 240;
+        abstractSection = `<div class="paper-detail-abstract${abstractIsShort ? " single-col" : ""}">${escapeHtml(body)}</div>`;
       } else {
         const placeholder = project.topic
           ? `本论文围绕「${escapeHtml(project.topic)}」展开研究。当前项目尚在推进，论文产物稍后自动同步到看板。`
           : "本项目尚未产出可读的论文草稿。";
         abstractSection = `<div class="paper-detail-empty">${placeholder}</div>`;
+        abstractIsShort = true;
       }
 
+      // running-head 内容
       const venueHtml = `
-        <span class="venue-tag">${escapeHtml(venue)}</span>
+        <span class="venue-tag">${escapeHtml(runhead.left)}</span>
         <span class="venue-dot"></span>
-        <span>${escapeHtml(stage)}</span>
+        <span>${escapeHtml(runhead.article)}</span>
         <span class="venue-dot"></span>
-        <span>${escapeHtml(year)}</span>
+        <span>${escapeHtml(runhead.page)}</span>
         <span class="venue-dot"></span>
-        <span class="status-pill ${statusClass(project.status)}" style="font-family: var(--font-sans); font-size: 10.5px;">${escapeHtml(project.statusText)}</span>
+        <span class="status-pill ${statusClass(project.status)}">${escapeHtml(statusLabel)}</span>
       `;
 
+      // 作者以 · 分隔
+      const authorsHtml = authorsLine.split(/[、,]/).map(s => escapeHtml(s.trim())).filter(Boolean)
+        .join('<span class="author-sep">·</span>') || "一人科研部门 · 自动研究团队";
+
       const bodyHtml = `
+        <div class="paper-detail-eyebrow">${escapeHtml(venue)} · ${escapeHtml(year)}</div>
         <h2 class="paper-detail-title" id="paperDetailTitle">${escapeHtml(project.name || project.topic || project.id)}</h2>
-        <div class="paper-detail-authors">${escapeHtml(authorsLine)}</div>
+        <div class="paper-detail-authors">${authorsHtml}</div>
         <div class="paper-detail-affil">一人科研部门 Research-OPD · 自动化科研流水线</div>
+
+        <hr class="paper-detail-rule">
 
         <div class="paper-detail-meta-grid">
           <div class="paper-detail-meta-item">
-            <div class="meta-k">当前阶段</div>
+            <div class="meta-k">Stage</div>
             <div class="meta-v">${escapeHtml(stage)}</div>
           </div>
           <div class="paper-detail-meta-item">
-            <div class="meta-k">进度</div>
+            <div class="meta-k">Progress</div>
             <div class="meta-v">${progress}%</div>
           </div>
           <div class="paper-detail-meta-item">
-            <div class="meta-k">累计产物</div>
+            <div class="meta-k">Artifacts</div>
             <div class="meta-v">${artifactCount}</div>
           </div>
           <div class="paper-detail-meta-item">
-            <div class="meta-k">参与员工</div>
+            <div class="meta-k">Authors</div>
             <div class="meta-v">${empCount}</div>
           </div>
           <div class="paper-detail-meta-item">
-            <div class="meta-k">运行时长</div>
-            <div class="meta-v">${duration ? formatDuration(duration) : "—"}</div>
+            <div class="meta-k">Runtime</div>
+            <div class="meta-v">${duration ? escapeHtml(formatDuration(duration)) : "—"}</div>
           </div>
           <div class="paper-detail-meta-item">
-            <div class="meta-k">最近更新</div>
-            <div class="meta-v">${lastUpdated ? formatRelativeDate(new Date(lastUpdated)) : "未更新"}</div>
+            <div class="meta-k">Revised</div>
+            <div class="meta-v">${lastUpdated ? escapeHtml(formatRelativeDate(new Date(lastUpdated))) : "—"}</div>
           </div>
         </div>
 
-        <div class="paper-detail-section-title">Abstract · 摘要</div>
+        <div class="paper-detail-section-title">Abstract</div>
         ${abstractSection}
 
         ${keywords.length ? `
-          <div class="paper-detail-section-title">Keywords · 关键词</div>
+          <div class="paper-detail-section-title">Keywords</div>
           <div class="paper-detail-keywords">${keywords.map(k => `<span class="paper-keyword">${escapeHtml(k)}</span>`).join("")}</div>
         ` : ""}
 
         ${project.topic ? `
-          <div class="paper-detail-section-title">Research Topic · 研究主题</div>
-          <div class="paper-detail-abstract" style="font-size: 14px;">${escapeHtml(project.topic)}</div>
+          <div class="paper-detail-section-title">Research Topic</div>
+          <div class="paper-detail-abstract single-col" style="font-size: 14px;">${escapeHtml(project.topic)}</div>
         ` : ""}
 
         ${cache?.sourcePath ? `
-          <div class="paper-detail-section-title">Source · 产物出处</div>
-          <div class="paper-detail-abstract" style="font-size: 12.5px; color: var(--muted); font-family: var(--font-sans);">
+          <div class="paper-detail-section-title">Source</div>
+          <div class="paper-detail-abstract single-col" style="font-size: 12.5px; color: #6c6444; font-family: var(--font-sans);">
             ${escapeHtml(cache.sourcePath)}
           </div>
         ` : ""}
